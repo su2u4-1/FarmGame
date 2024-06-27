@@ -1,156 +1,186 @@
 {
-    "crops": [
-        {
-            "name": "小麥",
-            "growth_time": 3,
-            "seed_price": 5,
-            "sell_price": 10,
-            "soil_needed": 2
+    crops: {
+        wheat: {
+            id: "wheat",
+            growth_time: 3,
+            seed_price: 5,
+            sell_price: 10,
+            soil_needed: 2
         },
-        {
-            "name": "玉米",
-            "growth_time": 5,
-            "seed_price": 10,
-            "sell_price": 20,
-            "soil_needed": 3
+        corn: {
+            id: "corn",
+            growth_time: 5,
+            seed_price: 10,
+            sell_price: 20,
+            soil_needed: 3
         },
-        {
-            "name": "馬鈴薯",
-            "growth_time": 4,
-            "seed_price": 8,
-            "sell_price": 15,
-            "soil_needed": 2
+        potato: {
+            id: "potato",
+            growth_time: 4,
+            seed_price: 8,
+            sell_price: 15,
+            soil_needed: 2
         },
-        {
-            "name": "番茄",
-            "growth_time": 6,
-            "seed_price": 12,
-            "sell_price": 25,
-            "soil_needed": 4
+        tomato: {
+            id: "tomato",
+            growth_time: 6,
+            seed_price: 12,
+            sell_price: 25,
+            soil_needed: 4
         },
-        {
-            "name": "胡蘿蔔",
-            "growth_time": 4,
-            "seed_price": 7,
-            "sell_price": 14,
-            "soil_needed": 2
+        carrot: {
+            id: "carrot",
+            growth_time: 4,
+            seed_price: 7,
+            sell_price: 14,
+            soil_needed: 2
         },
-        {
-            "name": "草莓",
-            "growth_time": 5,
-            "seed_price": 15,
-            "sell_price": 30,
-            "soil_needed": 3
+        strawberry: {
+            id: "strawberry",
+            growth_time: 5,
+            seed_price: 15,
+            sell_price: 30,
+            soil_needed: 3
         },
-        {
-            "name": "青椒",
-            "growth_time": 7,
-            "seed_price": 18,
-            "sell_price": 35,
-            "soil_needed": 4
+        Green: {
+            id: "Green",
+            growth_time: 7,
+            seed_price: 18,
+            sell_price: 35,
+            soil_needed: 4
         },
-        {
-            "name": "菠菜",
-            "growth_time": 3,
-            "seed_price": 6,
-            "sell_price": 12,
-            "soil_needed": 1
+        spinach: {
+            id: "spinach",
+            growth_time: 3,
+            seed_price: 6,
+            sell_price: 12,
+            soil_needed: 1
         },
-        {
-            "name": "洋蔥",
-            "growth_time": 6,
-            "seed_price": 9,
-            "sell_price": 20,
-            "soil_needed": 3
+        onion: {
+            id: "onion",
+            growth_time: 6,
+            seed_price: 9,
+            sell_price: 20,
+            soil_needed: 3
         },
-        {
-            "name": "南瓜",
-            "growth_time": 8,
-            "seed_price": 20,
-            "sell_price": 40,
-            "soil_needed": 5
-        }
+        pumpkin: {
+            id: "pumpkin",
+            growth_time: 8,
+            seed_price: 20,
+            sell_price: 40,
+            soil_needed: 5
+        },
+    },
+    animals: {
+        chicken: {
+            id: "chicken",
+            baby_price: 20,
+            growth_time: 2,
+            adult_sell_price: 50,
+            food: ["wheat", "corn"],
+            food_needed_per_day: 1
+        },
+        ox: {
+            id: "ox",
+            baby_price: 50,
+            growth_time: 7,
+            adult_sell_price: 150,
+            food: ["corn", "tomato"],
+            food_needed_per_day: 2
+        },
+        sheep: {
+            id: "sheep",
+            baby_price: 30,
+            growth_time: 5,
+            adult_sell_price: 100,
+            food: ["carrot", "corn"],
+            food_needed_per_day: 2
+        },
+        pig: {
+            id: "pig",
+            baby_price: 40,
+            growth_time: 6,
+            adult_sell_price: 120,
+            food: ["corn", "potato"],
+            food_needed_per_day: 3
+        },
+        duck: {
+            id: "duck",
+            baby_price: 25,
+            growth_time: 3,
+            adult_sell_price: 60,
+            food: ["wheat", "tomato"],
+            food_needed_per_day: 1
+        },
+        rabbit: {
+            id: "rabbit",
+            baby_price: 15,
+            growth_time: 4,
+            adult_sell_price: 40,
+            food: ["carrot", "tomato"],
+            food_needed_per_day: 1
+        },
+        horse: {
+            id: "horse",   
+            baby_price: 70,
+            growth_time: 10,
+            adult_sell_price: 200,
+            food: ["corn", "potato"],
+            food_needed_per_day: 3
+        },
+        goat: {
+            id: "goat",
+            baby_price: 35,
+            growth_time: 6,
+            adult_sell_price: 110,
+            food: ["carrot", "onion"],
+            food_needed_per_day: 2
+        },
+        turkey: {
+            id: "turkey",
+            baby_price: 30,
+            growth_time: 5,
+            adult_sell_price: 90,
+            food: ["wheat", "corn"],
+            food_needed_per_day: 1
+        },
+        goose: {
+            id: "goose",
+            baby_price: 25,
+            growth_time: 3,
+            adult_sell_price: 70,
+            food: ["potato", "tomato"],
+            food_needed_per_day: 1
+        },
+    },
+    items: {
+        organic_fertilizer: {
+            id: "organic_fertilizer",
+            describe: "使用後可以增加地力，且長成的作物不會失去有機作物標誌"
+        },
+        chemical_fertilizer: {
+            id: "chemical_fertilizer",
+            describe: "使用後可以增加地力，但長成的作物會失去有機作物標誌"
+        },
+        energy_drink_small: {
+            id: "energy_drink_small",
+            describe: "飲用後可以增加體力1點"
+        },
+        energy_drink_medium: {
+            id: "energy_drink_medium",
+            describe: "飲用後可以增加體力5點"
+        },
+        energy_drink_large: {
+            id: "energy_drink_large",
+            describe: "飲用後可以增加體力10點"
+        },
+        insecticide: {
+            id: "insecticide",
+            describe: "使用後可以除蟲，但長成的作物會失去有機作物標誌"
+        },
+    },
+    language_list: [
+        "en",
+        "zh-tw",
     ],
-    "animals": [
-        {
-            "name": "雞",
-            "baby_price": 20,
-            "growth_time": 2,
-            "adult_sell_price": 50,
-            "food": ["小麥", "玉米"],
-            "food_needed_per_day": 1
-        },
-        {
-            "name": "牛",
-            "baby_price": 50,
-            "growth_time": 7,
-            "adult_sell_price": 150,
-            "food": ["草", "玉米"],
-            "food_needed_per_day": 2
-        },
-        {
-            "name": "羊",
-            "baby_price": 30,
-            "growth_time": 5,
-            "adult_sell_price": 100,
-            "food": ["草", "胡蘿蔔"],
-            "food_needed_per_day": 2
-        },
-        {
-            "name": "豬",
-            "baby_price": 40,
-            "growth_time": 6,
-            "adult_sell_price": 120,
-            "food": ["玉米", "馬鈴薯"],
-            "food_needed_per_day": 3
-        },
-        {
-            "name": "鴨",
-            "baby_price": 25,
-            "growth_time": 3,
-            "adult_sell_price": 60,
-            "food": ["小麥", "番茄"],
-            "food_needed_per_day": 1
-        },
-        {
-            "name": "兔子",
-            "baby_price": 15,
-            "growth_time": 4,
-            "adult_sell_price": 40,
-            "food": ["胡蘿蔔", "草"],
-            "food_needed_per_day": 1
-        },
-        {
-            "name": "馬",   
-            "baby_price": 70,
-            "growth_time": 10,
-            "adult_sell_price": 200,
-            "food": ["草", "玉米"],
-            "food_needed_per_day": 3
-        },
-        {
-            "name": "山羊",
-            "baby_price": 35,
-            "growth_time": 6,
-            "adult_sell_price": 110,
-            "food": ["草", "胡蘿蔔"],
-            "food_needed_per_day": 2
-        },
-        {
-            "name": "火雞",
-            "baby_price": 30,
-            "growth_time": 5,
-            "adult_sell_price": 90,
-            "food": ["小麥", "玉米"],
-            "food_needed_per_day": 1
-        },
-        {
-            "name": "鵝",
-            "baby_price": 25,
-            "growth_time": 3,
-            "adult_sell_price": 70,
-            "food": ["草", "馬鈴薯"],
-            "food_needed_per_day": 1
-        },
-    ]
 }

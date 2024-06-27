@@ -1,4 +1,1 @@
-{
-    "name": "su",
-    "money": 100,
-}
+{name: "su", money: 0, bag: {}, corral_n: 1, farmland_n: 5, day: 1, stamina: 10, stamina_max: 20}
