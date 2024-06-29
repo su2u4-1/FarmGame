@@ -1,4 +1,5 @@
 import os.path
+from random import random
 import json5
 
 __all__ = ["init", "Bag", "Player", "TEXT", "DATA"]
@@ -40,10 +41,44 @@ class Bag(dict):
         else:
             raise RuntimeError(f"Item {key} quantity is negative.")
 
-    def show(self) -> None:
-        print("[名稱    ][數量]")
-        for k, v in self.items():
-            print(f"[{TEXT[k]:<6}][{v:<4}]")
+    def show(self, mode: str = "default") -> None:
+        if mode == "seed":
+            if sum(1 if k in DATA["seed"] else 0 for k in self.keys()) == 0:
+                print("空無一物")
+            else:
+                print("[編號][名稱][數量]")
+                for k, v in self.items():
+                    if k in DATA["seed"]:
+                        print(f"[{DATA["seed"][k].id}][{TEXT[k]:<6}][{v:<4}]")
+        else:
+            if len(self) == 0:
+                print("空無一物")
+            else:
+                print("[編號][名稱][數量]")
+                for k, v in self.items():
+                    if k in DATA["crops"]:
+                        print(f"[{DATA["crops"][k].id}][{TEXT[k]}][{v}]")
+                    if k in DATA["seed"]:
+                        print(f"[{DATA["seed"][k].id}][{TEXT[k]}][{v}]")
+                    if k in DATA["animals"]:
+                        print(f"[{DATA["animals"][k].id}][{TEXT[k]}][{v}]")
+
+
+class farmland:
+    def __init__(self):
+        self.crop = ""
+        self.growth_time = 0
+        self.soil_fertility = 10
+        self.bug_appear_probability = 0.1
+        self.bug_appear = False
+
+
+class corral:
+    def __init__(self):
+        self.animal = ""
+        self.growth_time = 0
+        self.neatness = 10
+        self.manger = []
 
 
 class Player:
@@ -51,10 +86,11 @@ class Player:
         self.name = name
         self.money = 0
         self.bag = Bag()
-        self.corral_n = 1
-        self.farmland_n = 5
+        self.corral = [corral()]
+        self.farmland = [farmland()] * 5
         self.day = 1
         self.stamina = 10
+        self.stamina_recovery_speed = 10
         self.stamina_max = 20
 
     def save_archive(self, root: str) -> bool:
@@ -67,5 +103,34 @@ class Player:
             if option != "Yes" and option != "yes" and option != "y" and option != "Y":
                 return False
         with open(path, "+w") as f:
-            f.write(json5.dumps(self.__dict__))
+            f.write(json5.dumps(self.serialize()))
         return True
+
+    def serialize(self) -> dict:
+        t = {}
+        for k, v in self.__dict__.items():
+            if k == "farmland" or k == "corral":
+                t[k] = []
+                for i in v:
+                    t[k].append(i.__dict__())
+            elif k == "bag":
+                t[k] = dict(v)
+            else:
+                t[k] = v
+
+    def load(self, data: dict) -> None:
+        for k, v in data.items():
+            if k == "farmland":
+                self.__dict__[k] = []
+                for i in v:
+                    self.__dict__[k].append(farmland())
+                    self.__dict__[k][-1].__dict__.update(i)
+            elif k == "corral":
+                self.__dict__[k] = []
+                for i in v:
+                    self.__dict__[k].append(corral())
+                    self.__dict__[k][-1].__dict__.update(i)
+            elif k == "bag":
+                self.__dict__[k] = Bag(v)
+            else:
+                self.__dict__[k] = v

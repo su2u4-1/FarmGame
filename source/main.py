@@ -15,7 +15,7 @@ def start() -> None:
         with open(path, "r") as f:
             data = json5.load(f)
         player = Player(name)
-        player.__dict__.update(data)
+        player.load(data)
         print(f"玩家{player.name}載入成功")
         return player
 
@@ -76,20 +76,80 @@ def main(player: Player) -> None:
             print("輸入錯誤")
             other()
 
+    def farmland() -> None:
+        def farm_operate() -> None:
+            while True:
+                option = input("[1.種植][2.施肥][3.採收/割除][4.除草][5.除蟲][6.離開]:")
+                if option == "1":
+                    print("你有的種子:")
+                    player.bag.show("seed")
+                elif option == "2":
+                    pass
+                elif option == "3":
+                    pass
+                elif option == "4":
+                    pass
+                elif option == "5":
+                    pass
+                elif option == "6":
+                    break
+                else:
+                    print("輸入錯誤")
+
+        while True:
+            option = input("[1.照顧農田][2.詳細資訊][3.離開]:")
+            if option == "1":
+                n = input("要照顧的農田編號(可輸入多個，用空白隔開，輸入all代表全選):")
+                if n == "all":
+                    c = list(range(len(player.farmland)))
+                    farm_operate(c)
+                else:
+                    n = n.split()
+                    c = []
+                    for i in len(n):
+                        try:
+                            n[i] = int(n[i])
+                        except:
+                            print(f"{n[i]}非數字")
+                            break
+                        if 0 <= n[i] < len(player.farmland):
+                            c.append(n[i])
+                        else:
+                            print(f"農田編號{n[i]}不存在")
+                            break
+                    else:
+                        farm_operate(c)
+            elif option == "2":
+                print("目前農田數:", len(player.farmland))
+                print("[編號][作物][生長時間][地力][蟲子出現機率][出現蟲子]")
+                for i, v in enumerate(player.farmland):
+                    if v.crop == "":
+                        print(f"[{i}][空][0/0][{v.soil_fertility}][0][False]")
+                    else:
+                        print(f"[{i}][{TEXT[v.crop]}][{v.growth_time}/{DATA["crops"][v.crop].growth_time}][{v.soil_fertility}][{v.bug_appear_probability}][{v.bug_appear}]")
+            elif option == "3":
+                return
+            else:
+                print("輸入錯誤")
+
     print("遊戲開始")
     while True:
         option = input("[1.農田][2.畜欄][3.商店][4.回家][5.其他]:")
         if option == "1":
-            pass
+            farmland()
         elif option == "2":
             pass
         elif option == "3":
             pass
         elif option == "4":
             player.day += 1
+            player.stamina += player.stamina_recovery_speed
+            if player.stamina > player.stamina_max:
+                player.stamina = player.stamina_max
             print("你回家睡了一覺")
             print("Zzz")
             print(f"今天是第{player.day}天")
+            print(f"你的體力回復到了{player.stamina}")
         elif option == "5":
             other()
         else:
