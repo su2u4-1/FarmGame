@@ -77,9 +77,9 @@ def main(player: Player) -> None:
             other()
 
     def farmland() -> None:
-        def farm_operate() -> None:
+        def farm_operate(c: list[int]) -> None:
             while True:
-                option = input("[1.種植][2.施肥][3.採收/割除][4.除草][5.除蟲][6.離開]:")
+                option = input("[1.種植][2.施肥][3.採收/割除][4.除草][5.除蟲][6.資訊][7.離開]:")
                 if option == "1":
                     print("你有的種子:")
                     player.bag.show("seed")
@@ -92,6 +92,14 @@ def main(player: Player) -> None:
                 elif option == "5":
                     pass
                 elif option == "6":
+                    print("[編號][作物][生長時間][地力][新蟲子出現機率][蟲子數量][雜草出現機率][雜草出現]")
+                    for i in c:
+                        v = player.farmland[i]
+                        if v.crop == "":
+                            print(f"[{i}][Null][0/0][{v.soil_fertility}][0%][0][0%][False]")
+                        else:
+                            print(f"[{i}][{TEXT[v.crop]}][{v.growth_time}/{CROPS[v.crop]["growth_time"]}][{v.soil_fertility}][{v.bug_appear*100}%][{v.bug_number}][{v.weed_appear_prob*100}%][{v.weed_appear}]")
+                elif option == "7":
                     break
                 else:
                     print("輸入錯誤")
@@ -121,16 +129,30 @@ def main(player: Player) -> None:
                         farm_operate(c)
             elif option == "2":
                 print("目前農田數:", len(player.farmland))
-                print("[編號][作物][生長時間][地力][蟲子出現機率][出現蟲子]")
+                print("[編號][作物][生長時間][地力][新蟲子出現機率][蟲子數量][雜草出現機率][雜草出現]")
                 for i, v in enumerate(player.farmland):
                     if v.crop == "":
-                        print(f"[{i}][空][0/0][{v.soil_fertility}][0][False]")
+                        print(f"[{i}][Null][0/0][{v.soil_fertility}][0%][0][0%][False]")
                     else:
-                        print(f"[{i}][{TEXT[v.crop]}][{v.growth_time}/{DATA["crops"][v.crop].growth_time}][{v.soil_fertility}][{v.bug_appear_probability}][{v.bug_appear}]")
+                        print(f"[{i}][{TEXT[v.crop]}][{v.growth_time}/{CROPS[v.crop]["growth_time"]}][{v.soil_fertility}][{v.bug_appear*100}%][{v.bug_number}][{v.weed_appear_prob*100}%][{v.weed_appear}]")
             elif option == "3":
                 return
             else:
                 print("輸入錯誤")
+
+    def next_day() -> None:
+        print("你回家睡了一覺")
+        print("Zzz")
+        player.day += 1
+        print(f"今天是第{player.day}天")
+        player.stamina += player.stamina_recovery_speed
+        if player.stamina > player.stamina_max:
+            player.stamina = player.stamina_max
+        print(f"你的體力回復到了{player.stamina}")
+        for i in player.farmland:
+            i.next_day()
+        for i in player.corral:
+            i.next_day()
 
     print("遊戲開始")
     while True:
@@ -142,14 +164,7 @@ def main(player: Player) -> None:
         elif option == "3":
             pass
         elif option == "4":
-            player.day += 1
-            player.stamina += player.stamina_recovery_speed
-            if player.stamina > player.stamina_max:
-                player.stamina = player.stamina_max
-            print("你回家睡了一覺")
-            print("Zzz")
-            print(f"今天是第{player.day}天")
-            print(f"你的體力回復到了{player.stamina}")
+            next_day()
         elif option == "5":
             other()
         else:

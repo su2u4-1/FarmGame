@@ -2,24 +2,27 @@ import os.path
 from random import random
 import json5
 
-__all__ = ["init", "Bag", "Player", "TEXT", "DATA"]
+__all__ = ["init", "Bag", "Player", "TEXT", "DATA", "CROPS", "ANIMALS"]
 TEXT: dict = {}
 DATA: dict = {}
+N = dict[str : dict[str : int | list[str]]]
 
 
 def init(root: str, language: str = "en") -> None:
-    global TEXT, DATA
+    global TEXT, DATA, CROPS, ANIMALS
     path = os.path.join(root, "data", f"data.json5")
     with open(path, "r") as f:
-        DATA = json5.load(f)
+        DATA: dict[str : N | list[str]] = json5.load(f)
+    CROPS: N = DATA["crops"]
+    ANIMALS: N = DATA["animals"]
     path = os.path.join(root, "data", f"{language}.json5")
     if os.path.isfile(path):
         with open(path, "r") as f:
-            TEXT = json5.load(f)
+            TEXT: dict[str:str] = json5.load(f)
     else:
         path = os.path.join(root, "data", f"{DATA["language_list"][0]}.json5")
         with open(path, "r") as f:
-            TEXT = json5.load(f)
+            TEXT: dict[str:str] = json5.load(f)
 
 
 class Bag(dict):
@@ -49,19 +52,19 @@ class Bag(dict):
                 print("[編號][名稱][數量]")
                 for k, v in self.items():
                     if k in DATA["seed"]:
-                        print(f"[{DATA["seed"][k].id}][{TEXT[k]:<6}][{v:<4}]")
+                        print(f"[{DATA["seed"][k]["id"]}][{TEXT[k]:<6}][{v:<4}]")
         else:
             if len(self) == 0:
                 print("空無一物")
             else:
                 print("[編號][名稱][數量]")
                 for k, v in self.items():
-                    if k in DATA["crops"]:
-                        print(f"[{DATA["crops"][k].id}][{TEXT[k]}][{v}]")
+                    if k in CROPS:
+                        print(f"[{CROPS[k]["id"]}][{TEXT[k]}][{v}]")
                     if k in DATA["seed"]:
-                        print(f"[{DATA["seed"][k].id}][{TEXT[k]}][{v}]")
-                    if k in DATA["animals"]:
-                        print(f"[{DATA["animals"][k].id}][{TEXT[k]}][{v}]")
+                        print(f"[{DATA["seed"][k]["id"]}][{TEXT[k]}][{v}]")
+                    if k in ANIMALS:
+                        print(f"[{ANIMALS[k]["id"]}][{TEXT[k]}][{v}]")
 
 
 class farmland:
@@ -69,8 +72,22 @@ class farmland:
         self.crop = ""
         self.growth_time = 0
         self.soil_fertility = 10
-        self.bug_appear_probability = 0.1
-        self.bug_appear = False
+        self.bug_appear = 0.1
+        self.bug_number = 0
+        self.weed_appear_prob = 0.1
+        self.weed_appear = False
+
+    def next_day(self) -> None:
+        self.weed_appear += round(random() / 10, 2)
+        if random() <= self.weed_appear_prob:
+            self.weed_appear = True
+        if not self.weed_appear:
+            self.growth_time += 1
+        self.bug_appear += round(random() / 10, 2)
+        if random() <= self.bug_appear:
+            self.bug_number += 1
+        if self.bug_number > CROPS[self.crop]["pest_resistance"]:
+            print(f"你的{TEXT[self.crop]}死掉了，因為蟲子過多")
 
 
 class corral:
@@ -79,6 +96,13 @@ class corral:
         self.growth_time = 0
         self.neatness = 10
         self.manger = []
+
+    def next_day(self) -> None:
+        self.neatness -= random()
+        if ANIMALS[self.animal]["required_neatness"] >= self.neatness:
+            self.growth_time += 1
+        if self.neatness < 0:
+            print(f"你的{TEXT[self.animal]}死掉了，因為環境太過髒亂")
 
 
 class Player:

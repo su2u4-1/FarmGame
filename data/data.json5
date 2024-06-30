@@ -5,70 +5,80 @@
             growth_time: 3,
             seed_price: 5,
             sell_price: 10,
-            soil_needed: 2
+            soil_needed: 2,
+            pest_resistance: 4
         },
         corn: {
             id: 1,
             growth_time: 5,
             seed_price: 10,
             sell_price: 20,
-            soil_needed: 3
+            soil_needed: 3,
+            pest_resistance: 5
         },
         potato: {
             id: 2,
             growth_time: 4,
             seed_price: 8,
             sell_price: 15,
-            soil_needed: 2
+            soil_needed: 2,
+            pest_resistance: 3
         },
         tomato: {
             id: 3,
             growth_time: 6,
             seed_price: 12,
             sell_price: 25,
-            soil_needed: 4
+            soil_needed: 4,
+            pest_resistance: 2
         },
         carrot: {
             id: 4,
             growth_time: 4,
             seed_price: 7,
             sell_price: 14,
-            soil_needed: 2
+            soil_needed: 2,
+            pest_resistance: 4
         },
         strawberry: {
             id: 5,
             growth_time: 5,
             seed_price: 15,
             sell_price: 30,
-            soil_needed: 3
+            soil_needed: 3,
+            pest_resistance: 3
         },
         Green: {
             id: 6,
             growth_time: 7,
             seed_price: 18,
             sell_price: 35,
-            soil_needed: 4
+            soil_needed: 4,
+            pest_resistance: 5
         },
         spinach: {
             id: 7,
             growth_time: 3,
             seed_price: 6,
             sell_price: 12,
-            soil_needed: 1
+            soil_needed: 1,
+            pest_resistance: 4
         },
         onion: {
             id: 8,
             growth_time: 6,
             seed_price: 9,
             sell_price: 20,
-            soil_needed: 3
+            soil_needed: 3,
+            pest_resistance: 5
         },
         pumpkin: {
             id: 9,
             growth_time: 8,
             seed_price: 20,
             sell_price: 40,
-            soil_needed: 5
+            soil_needed: 5,
+            pest_resistance: 3
         },
     },
     seed: {
@@ -110,7 +120,8 @@
             growth_time: 2,
             adult_sell_price: 50,
             food: ["wheat", "corn"],
-            food_needed_per_day: 1
+            food_needed_per_day: 1,
+            required_neatness: 3
         },
         ox: {
             id: 21,
@@ -118,7 +129,8 @@
             growth_time: 7,
             adult_sell_price: 150,
             food: ["corn", "tomato"],
-            food_needed_per_day: 2
+            food_needed_per_day: 2,
+            required_neatness: 7
         },
         sheep: {
             id: 22,
@@ -126,7 +138,8 @@
             growth_time: 5,
             adult_sell_price: 100,
             food: ["carrot", "corn"],
-            food_needed_per_day: 2
+            food_needed_per_day: 2,
+            required_neatness: 5
         },
         pig: {
             id: 23,
@@ -134,7 +147,8 @@
             growth_time: 6,
             adult_sell_price: 120,
             food: ["corn", "potato"],
-            food_needed_per_day: 3
+            food_needed_per_day: 3,
+            required_neatness: 2
         },
         duck: {
             id: 24,
@@ -142,7 +156,8 @@
             growth_time: 3,
             adult_sell_price: 60,
             food: ["wheat", "tomato"],
-            food_needed_per_day: 1
+            food_needed_per_day: 1,
+            required_neatness: 4
         },
         rabbit: {
             id: 25,
@@ -150,7 +165,8 @@
             growth_time: 4,
             adult_sell_price: 40,
             food: ["carrot", "tomato"],
-            food_needed_per_day: 1
+            food_needed_per_day: 1,
+            required_neatness: 6
         },
         horse: {
             id: 26,   
@@ -158,7 +174,8 @@
             growth_time: 10,
             adult_sell_price: 200,
             food: ["corn", "potato"],
-            food_needed_per_day: 3
+            food_needed_per_day: 3,
+            required_neatness: 8
         },
         goat: {
             id: 27,
@@ -166,7 +183,8 @@
             growth_time: 6,
             adult_sell_price: 110,
             food: ["carrot", "onion"],
-            food_needed_per_day: 2
+            food_needed_per_day: 2,
+            required_neatness: 5
         },
         turkey: {
             id: 28,
@@ -174,7 +192,8 @@
             growth_time: 5,
             adult_sell_price: 90,
             food: ["wheat", "corn"],
-            food_needed_per_day: 1
+            food_needed_per_day: 1,
+            required_neatness: 4
         },
         goose: {
             id: 29,
@@ -182,7 +201,8 @@
             growth_time: 3,
             adult_sell_price: 70,
             food: ["potato", "tomato"],
-            food_needed_per_day: 1
+            food_needed_per_day: 1,
+            required_neatness: 5
         },
     },
     items: {
