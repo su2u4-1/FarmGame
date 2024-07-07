@@ -83,6 +83,21 @@ def main(player: Player) -> None:
                 if option == "1":
                     print("你有的種子:")
                     player.bag.show("seed")
+                    select = input("所選物品id:")
+                    try:
+                        select = int(select)
+                    except:
+                        print("輸入非數字")
+                        continue
+                    for i in player.bag:
+                        if DATA["seed"][i]["id"] == select:
+                            select = i
+                            player.bag[i] -= 1
+                            break
+                    else:
+                        print("所選物品不存在")
+                        continue
+                    #  種植select
                 elif option == "2":
                     pass
                 elif option == "3":
