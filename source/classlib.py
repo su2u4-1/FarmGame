@@ -3,26 +3,28 @@ from random import random
 import json5
 
 __all__ = ["init", "Bag", "Player", "TEXT", "DATA", "CROPS", "ANIMALS"]
-TEXT: dict = {}
-DATA: dict = {}
 N = dict[str : dict[str : int | list[str]]]
+TEXT: dict[str:str] = {}
+DATA: dict[str : N | list[str]] = {}
+CROPS: N = {}
+ANIMALS: N = {}
 
 
 def init(root: str, language: str = "en") -> None:
     global TEXT, DATA, CROPS, ANIMALS
     path = os.path.join(root, "data", f"data.json5")
     with open(path, "r") as f:
-        DATA: dict[str : N | list[str]] = json5.load(f)
-    CROPS: N = DATA["crops"]
-    ANIMALS: N = DATA["animals"]
+        DATA = json5.load(f)
+    CROPS = DATA["crops"]
+    ANIMALS = DATA["animals"]
     path = os.path.join(root, "data", f"{language}.json5")
     if os.path.isfile(path):
         with open(path, "r") as f:
-            TEXT: dict[str:str] = json5.load(f)
+            TEXT = json5.load(f)
     else:
         path = os.path.join(root, "data", f"{DATA["language_list"][0]}.json5")
         with open(path, "r") as f:
-            TEXT: dict[str:str] = json5.load(f)
+            TEXT = json5.load(f)
 
 
 class Bag(dict):

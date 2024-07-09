@@ -156,8 +156,10 @@ def main(player: Player) -> None:
         while True:
             option = input("[1.照顧農田][2.詳細資訊][3.離開]:")
             if option == "1":
-                n = input("要照顧的農田編號(可輸入多個數字用空白隔開，輸入all代表全選，可以用a~b來選取一個範圍):")
-                if n == "all":
+                n = input("要照顧的農田編號(可輸入多個數字用空白隔開，輸入all代表全選，可以用a~b來選取一個範圍，輸入-1取消):")
+                if n == "-1":
+                    continue
+                elif n == "all":
                     farm_operate(list(range(len(player.farmland))))
                 elif "~" in n:
                     n.replace(" ", "")
@@ -179,6 +181,19 @@ def main(player: Player) -> None:
                     farm_operate(list(range(n[0], n[1])))
                 else:
                     n = n.split()
+                    if len(n) == 1:
+                        try:
+                            n[0] = int(n[0])
+                        except:
+                            print(f"{n[0]}非數字")
+                            continue
+                        if 0 <= n[0] < len(player.farmland):
+                            c.append(n[0])
+                        else:
+                            print(f"農田編號{n[0]}不存在")
+                            continue
+                        farm_operate(0)
+                        continue
                     c = []
                     for i in len(n):
                         try:
