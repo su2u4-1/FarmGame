@@ -1,5 +1,6 @@
 import os.path
 import json5
+import random
 from classlib import *
 
 
@@ -97,9 +98,42 @@ def main(player: Player) -> None:
                     else:
                         print("所選物品不存在")
                         continue
-                    #  種植select
+                    for i in c:
+                        v = player.farmland[i]
+                        if v.crop != "":
+                            f = input(f"邊號{i}農田已經有作物{TEXT[v.crop]}，是否要覆蓋?(Yes/No):")
+                            if f != "Yes" and f != "yes" and f != "y" and f != "Y":
+                                continue
+                            v.weed_appear = False
+                            v.bug_number -= random.randrange(v.bug_number)
+                            v.weed_appear_prob = max(0, v.weed_appear_prob - random.random())
+                        v.crop = select
+                        v.growth_time = 0
+                        v.ripe = False
                 elif option == "2":
-                    pass
+                    print(f"你的有機肥料數量: {player.bag["organic_fertilizer"]}, 你的化學肥料數量: {player.bag["chemical_fertilizer"]}")
+                    f = input("[1.有機肥料][2.化學肥料]:")
+                    if f == "1":
+                        f = "organic_fertilizer"
+                        t = True
+                    elif f == "2":
+                        f = "chemical_fertilizer"
+                        t = False
+                    else:
+                        print("輸入錯誤")
+                        continue
+                    if player.bag[f] < len(c):
+                        print(f"你的{TEXT[f]}數量不足")
+                        continue
+                    player.bag[f] -= len(c)
+                    for i in c:
+                        v = player.farmland[i]
+                        v.soil_fertility += 1
+                        v.organic = t
+                        if t:
+                            v.bug_appear += random() / 10
+                        else:
+                            v.weed_appear_prob += random() / 10
                 elif option == "3":
                     pass
                 elif option == "4":
@@ -107,13 +141,13 @@ def main(player: Player) -> None:
                 elif option == "5":
                     pass
                 elif option == "6":
-                    print("[編號][作物][生長時間][地力][新蟲子出現機率][蟲子數量][雜草出現機率][雜草出現]")
+                    print("[編號][作物][生長時間][地力][新蟲子出現機率][蟲子數量][雜草出現機率][雜草出現][可收成][有機]")
                     for i in c:
                         v = player.farmland[i]
                         if v.crop == "":
                             print(f"[{i}][Null][0/0][{v.soil_fertility}][0%][0][0%][False]")
                         else:
-                            print(f"[{i}][{TEXT[v.crop]}][{v.growth_time}/{CROPS[v.crop]["growth_time"]}][{v.soil_fertility}][{v.bug_appear*100}%][{v.bug_number}][{v.weed_appear_prob*100}%][{v.weed_appear}]")
+                            print(f"[{i}][{TEXT[v.crop]}][{v.growth_time}/{CROPS[v.crop]["growth_time"]}][{v.soil_fertility}][{round(v.bug_appear*100, 2)}%][{v.bug_number}][{round(v.weed_appear_prob*100, 2)}%][{v.weed_appear}][{v.ripe}][{v.organic}]")
                 elif option == "7":
                     break
                 else:
@@ -122,10 +156,27 @@ def main(player: Player) -> None:
         while True:
             option = input("[1.照顧農田][2.詳細資訊][3.離開]:")
             if option == "1":
-                n = input("要照顧的農田編號(可輸入多個，用空白隔開，輸入all代表全選):")
+                n = input("要照顧的農田編號(可輸入多個數字用空白隔開，輸入all代表全選，可以用a~b來選取一個範圍):")
                 if n == "all":
-                    c = list(range(len(player.farmland)))
-                    farm_operate(c)
+                    farm_operate(list(range(len(player.farmland))))
+                elif "~" in n:
+                    n.replace(" ", "")
+                    n = n.split("~", 1)
+                    try:
+                        n[0] = int(n[0])
+                        n[1] = int(n[1])
+                    except:
+                        print(f"{n[0]}或{n[1]}不是數字")
+                        continue
+                    if n[0] > n[1]:
+                        n[0], n[1] = n[1], n[0]
+                    if 0 > n[0] or n[0] >= len(player.farmland):
+                        print(f"農田編號{n[0]}不存在")
+                        continue
+                    if 0 > n[1] or n[1] >= len(player.farmland):
+                        print(f"農田編號{n[1]}不存在")
+                        continue
+                    farm_operate(list(range(n[0], n[1])))
                 else:
                     n = n.split()
                     c = []
@@ -144,12 +195,12 @@ def main(player: Player) -> None:
                         farm_operate(c)
             elif option == "2":
                 print("目前農田數:", len(player.farmland))
-                print("[編號][作物][生長時間][地力][新蟲子出現機率][蟲子數量][雜草出現機率][雜草出現]")
+                print("[編號][作物][生長時間][地力][新蟲子出現機率][蟲子數量][雜草出現機率][雜草出現][可收成][有機]")
                 for i, v in enumerate(player.farmland):
                     if v.crop == "":
                         print(f"[{i}][Null][0/0][{v.soil_fertility}][0%][0][0%][False]")
                     else:
-                        print(f"[{i}][{TEXT[v.crop]}][{v.growth_time}/{CROPS[v.crop]["growth_time"]}][{v.soil_fertility}][{v.bug_appear*100}%][{v.bug_number}][{v.weed_appear_prob*100}%][{v.weed_appear}]")
+                        print(f"[{i}][{TEXT[v.crop]}][{v.growth_time}/{CROPS[v.crop]["growth_time"]}][{v.soil_fertility}][{round(v.bug_appear*100, 2)}%][{v.bug_number}][{round(v.weed_appear_prob*100, 2)}%][{v.weed_appear}][{v.ripe}][{v.organic}]")
             elif option == "3":
                 return
             else:

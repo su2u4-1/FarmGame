@@ -76,18 +76,25 @@ class farmland:
         self.bug_number = 0
         self.weed_appear_prob = 0.1
         self.weed_appear = False
+        self.ripe = False
+        self.organic = True
 
     def next_day(self) -> None:
-        self.weed_appear += round(random() / 10, 2)
+        self.weed_appear_prob += random() / 10
         if random() <= self.weed_appear_prob:
             self.weed_appear = True
-        if not self.weed_appear:
+        if self.weed_appear:
+            print(f"你的{TEXT[self.crop]}無法生長，因為出現雜草")
+        elif self.growth_time != -1:
             self.growth_time += 1
-        self.bug_appear += round(random() / 10, 2)
+        self.bug_appear += random() / 10
         if random() <= self.bug_appear:
             self.bug_number += 1
         if self.bug_number > CROPS[self.crop]["pest_resistance"]:
             print(f"你的{TEXT[self.crop]}死掉了，因為蟲子過多")
+            self.growth_time = -1
+        if CROPS[self.crop]["growth_time"] >= self.growth_time:
+            self.ripe = True
 
 
 class corral:
@@ -109,9 +116,9 @@ class Player:
     def __init__(self, name: str) -> None:
         self.name = name
         self.money = 0
-        self.bag = Bag()
-        self.corral = [corral()]
-        self.farmland = [farmland()] * 5
+        self.bag: Bag[str, int] = Bag()
+        self.corral: list[corral] = [corral()]
+        self.farmland: list[farmland] = [farmland()] * 5
         self.day = 1
         self.stamina = 10
         self.stamina_recovery_speed = 10
