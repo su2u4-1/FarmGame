@@ -141,13 +141,13 @@ def main(player: Player) -> None:
                 elif option == "5":
                     pass
                 elif option == "6":
-                    print("[編號][作物][生長時間][地力][新蟲子出現機率][蟲子數量][雜草出現機率][雜草出現][可收成][有機]")
-                    for i in c:
-                        v = player.farmland[i]
+                    farm_info = table(["編號", "作物", "生長時間", "地力", "新蟲子出現機率", "蟲子數量", "雜草出現機率", "雜草出現", "可收成", "有機"])
+                    for i, v in enumerate(player.farmland):
                         if v.crop == "":
-                            print(f"[{i}][Null][0/0][{v.soil_fertility}][0%][0][0%][False]")
+                            farm_info.add([i, "Null", "0/0", v.soil_fertility, "0%", 0, "0%", False, False, True])
                         else:
-                            print(f"[{i}][{TEXT[v.crop]}][{v.growth_time}/{CROPS[v.crop]["growth_time"]}][{v.soil_fertility}][{round(v.bug_appear*100, 2)}%][{v.bug_number}][{round(v.weed_appear_prob*100, 2)}%][{v.weed_appear}][{v.ripe}][{v.organic}]")
+                            farm_info([i, TEXT[v.crop], f"{v.growth_time}/{CROPS[v.crop]["growth_time"]}", v.soil_fertility, f"{round(v.bug_appear*100, 2)}%", v.bug_number, f"{round(v.weed_appear_prob*100, 2)}%", v.weed_appear, v.ripe, v.organic])
+                    farm_info.show()
                 elif option == "7":
                     break
                 else:
@@ -210,12 +210,13 @@ def main(player: Player) -> None:
                         farm_operate(c)
             elif option == "2":
                 print("目前農田數:", len(player.farmland))
-                print("[編號][作物][生長時間][地力][新蟲子出現機率][蟲子數量][雜草出現機率][雜草出現][可收成][有機]")
+                farm_info = table(["編號", "作物", "生長時間", "地力", "新蟲子出現機率", "蟲子數量", "雜草出現機率", "雜草出現", "可收成", "有機"])
                 for i, v in enumerate(player.farmland):
                     if v.crop == "":
-                        print(f"[{i}][Null][0/0][{v.soil_fertility}][0%][0][0%][False]")
+                        farm_info.add([i, "Null", "0/0", v.soil_fertility, "0%", 0, "0%", False, False, True])
                     else:
-                        print(f"[{i}][{TEXT[v.crop]}][{v.growth_time}/{CROPS[v.crop]["growth_time"]}][{v.soil_fertility}][{round(v.bug_appear*100, 2)}%][{v.bug_number}][{round(v.weed_appear_prob*100, 2)}%][{v.weed_appear}][{v.ripe}][{v.organic}]")
+                        farm_info([i, TEXT[v.crop], f"{v.growth_time}/{CROPS[v.crop]["growth_time"]}", v.soil_fertility, f"{round(v.bug_appear*100, 2)}%", v.bug_number, f"{round(v.weed_appear_prob*100, 2)}%", v.weed_appear, v.ripe, v.organic])
+                farm_info.show()
             elif option == "3":
                 return
             else:

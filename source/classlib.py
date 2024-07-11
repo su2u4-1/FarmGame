@@ -1,8 +1,9 @@
 import os.path
 from random import random
 import json5
+from wcwidth import wcswidth
 
-__all__ = ["init", "Bag", "Player", "TEXT", "DATA", "CROPS", "ANIMALS"]
+
 N = dict[str : dict[str : int | list[str]]]
 TEXT: dict[str:str] = {}
 DATA: dict[str : N | list[str]] = {}
@@ -51,22 +52,24 @@ class Bag(dict):
             if sum(1 if k in DATA["seed"] else 0 for k in self.keys()) == 0:
                 print("空無一物")
             else:
-                print("[編號][名稱][數量]")
+                bag_item = table(["編號", "名稱", "數量"])
                 for k, v in self.items():
                     if k in DATA["seed"]:
-                        print(f"[{DATA["seed"][k]["id"]}][{TEXT[k]:<6}][{v:<4}]")
+                        bag_item.add([DATA["seed"][k]["id"], TEXT[k], v])
+                bag_item.show()
         else:
             if len(self) == 0:
                 print("空無一物")
             else:
-                print("[編號][名稱][數量]")
+                bag_item = table(["編號", "名稱", "數量"])
                 for k, v in self.items():
                     if k in CROPS:
-                        print(f"[{CROPS[k]["id"]}][{TEXT[k]}][{v}]")
+                        bag_item.add([CROPS[k]["id"], TEXT[k], v])
                     if k in DATA["seed"]:
-                        print(f"[{DATA["seed"][k]["id"]}][{TEXT[k]}][{v}]")
+                        bag_item.add([DATA["seed"][k]["id"], TEXT[k], v])
                     if k in ANIMALS:
-                        print(f"[{ANIMALS[k]["id"]}][{TEXT[k]}][{v}]")
+                        bag_item.add([ANIMALS[k]["id"], TEXT[k], v])
+                bag_item.show()
 
 
 class farmland:
@@ -82,21 +85,22 @@ class farmland:
         self.organic = True
 
     def next_day(self) -> None:
-        self.weed_appear_prob += random() / 10
-        if random() <= self.weed_appear_prob:
-            self.weed_appear = True
-        if self.weed_appear:
-            print(f"你的{TEXT[self.crop]}無法生長，因為出現雜草")
-        elif self.growth_time != -1:
-            self.growth_time += 1
-        self.bug_appear += random() / 10
-        if random() <= self.bug_appear:
-            self.bug_number += 1
-        if self.bug_number > CROPS[self.crop]["pest_resistance"]:
-            print(f"你的{TEXT[self.crop]}死掉了，因為蟲子過多")
-            self.growth_time = -1
-        if CROPS[self.crop]["growth_time"] >= self.growth_time:
-            self.ripe = True
+        if self.crop != "":
+            self.weed_appear_prob += random() / 10
+            if random() <= self.weed_appear_prob:
+                self.weed_appear = True
+            if self.weed_appear:
+                print(f"你的{TEXT[self.crop]}無法生長，因為出現雜草")
+            elif self.growth_time != -1:
+                self.growth_time += 1
+            self.bug_appear += random() / 10
+            if random() <= self.bug_appear:
+                self.bug_number += 1
+            if self.bug_number > CROPS[self.crop]["pest_resistance"]:
+                print(f"你的{TEXT[self.crop]}死掉了，因為蟲子過多")
+                self.growth_time = -1
+            if CROPS[self.crop]["growth_time"] >= self.growth_time:
+                self.ripe = True
 
 
 class corral:
@@ -167,3 +171,24 @@ class Player:
                 self.__dict__[k] = Bag(v)
             else:
                 self.__dict__[k] = v
+
+
+class table:
+    def __init__(self, title: list) -> None:
+        self.data = [title]
+        self.length = [wcswidth(str(i)) for i in title]
+        self.n = len(title)
+
+    def add(self, d: list) -> None:
+        if len(d) != self.n:
+            raise ValueError("The length is different from the information above.")
+        self.data.append(d)
+        for i in range(self.n):
+            self.length[i] = max(self.length[i], wcswidth(str(d[i])))
+
+    def show(self) -> None:
+        for j in self.data:
+            for i in range(self.n):
+                print(f"[{j[i]}", end="")
+                print(" " * (self.length[i] - wcswidth(str(j[i]))), end="]")
+            print()
