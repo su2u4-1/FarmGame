@@ -1,9 +1,11 @@
 import os.path
 from random import random
+from typing import Self
 import json5
 from wcwidth import wcswidth
 
 
+__all__ = ["init", "Bag", "Player", "TEXT", "DATA", "CROPS", "ANIMALS", "table"]
 N = dict[str : dict[str : int | list[str]]]
 TEXT: dict[str:str] = {}
 DATA: dict[str : N | list[str]] = {}
@@ -71,13 +73,17 @@ class Bag(dict):
                         bag_item.add([ANIMALS[k]["id"], TEXT[k], v])
                 bag_item.show()
 
+    def add(self, other: Self | dict) -> None:
+        for k, v in other.items():
+            self[k] += v
+
 
 class farmland:
     def __init__(self):
         self.crop = ""
         self.growth_time = 0
         self.soil_fertility = 10
-        self.bug_appear = 0.1
+        self.bug_appear_prob = 0.1
         self.bug_number = 0
         self.weed_appear_prob = 0.1
         self.weed_appear = False
@@ -93,8 +99,8 @@ class farmland:
                 print(f"你的{TEXT[self.crop]}無法生長，因為出現雜草")
             elif self.growth_time != -1:
                 self.growth_time += 1
-            self.bug_appear += random() / 10
-            if random() <= self.bug_appear:
+            self.bug_appear_prob += random() / 10
+            if random() <= self.bug_appear_prob:
                 self.bug_number += 1
             if self.bug_number > CROPS[self.crop]["pest_resistance"]:
                 print(f"你的{TEXT[self.crop]}死掉了，因為蟲子過多")

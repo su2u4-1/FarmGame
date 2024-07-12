@@ -224,6 +224,9 @@
         insecticide: {
             id: 35,
         },
+        herbicide: {
+            id: 36,
+        }
     },
     language_list: [
         "en",

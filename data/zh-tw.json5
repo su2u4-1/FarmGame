@@ -35,6 +35,7 @@
     energy_drink_medium: "能量飲料(中)",
     energy_drink_large: "能量飲料(大)",
     insecticide: "殺蟲劑",
+    herbicide: "除草劑",
     wheat_describe: "小麥, 生長所需時間:3天, 所需地力:2",
     corn_describe: "玉米, 生長所需時間:5天, 所需地力:3",
     potato_describe: "馬鈴薯, 生長所需時間:4天, 所需地力:2",
@@ -71,4 +72,5 @@
     energy_drink_medium_describe: "飲用後可以增加體力5點",
     energy_drink_large_describe: "飲用後可以增加體力10點",
     insecticide_describe: "使用後可以除蟲，但長成的作物會失去有機作物標誌",
+    herbicide_describe: "使用後可以除草，但長成的作物會失去有機作物標誌",
 }

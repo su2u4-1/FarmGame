@@ -104,21 +104,22 @@ def main(player: Player) -> None:
                             f = input(f"邊號{i}農田已經有作物{TEXT[v.crop]}，是否要覆蓋?(Yes/No):")
                             if f != "Yes" and f != "yes" and f != "y" and f != "Y":
                                 continue
-                            v.weed_appear = False
-                            v.bug_number -= random.randrange(v.bug_number)
-                            v.weed_appear_prob = max(0, v.weed_appear_prob - random.random())
+                        v.weed_appear = False
+                        v.bug_number -= random.randrange(v.bug_number)
+                        v.weed_appear_prob = max(0, v.weed_appear_prob - random.random())
                         v.crop = select
                         v.growth_time = 0
                         v.ripe = False
                 elif option == "2":
                     print(f"你的有機肥料數量: {player.bag["organic_fertilizer"]}, 你的化學肥料數量: {player.bag["chemical_fertilizer"]}")
-                    f = input("[1.有機肥料][2.化學肥料]:")
+                    f = input("[1.有機肥料][2.化學肥料][3.取消]:")
                     if f == "1":
                         f = "organic_fertilizer"
-                        t = True
                     elif f == "2":
                         f = "chemical_fertilizer"
                         t = False
+                    elif f == "3":
+                        continue
                     else:
                         print("輸入錯誤")
                         continue
@@ -129,24 +130,82 @@ def main(player: Player) -> None:
                     for i in c:
                         v = player.farmland[i]
                         v.soil_fertility += 1
-                        v.organic = t
+                        if not t:
+                            v.organic = False
                         if t:
-                            v.bug_appear += random() / 10
+                            v.bug_appear_prob += random() / 10
                         else:
                             v.weed_appear_prob += random() / 10
                 elif option == "3":
-                    pass
+                    print("會把成熟的收走，沒成熟的割除")
+                    harvest = Bag()
+                    for i in c:
+                        v = player.farmland[i]
+                        if v.ripe:
+                            harvest[v.crop] += 1
+                        v.crop = ""
+                        v.weed_appear = False
+                        v.growth_time = 0
+                        v.ripe = False
+                        v.bug_number -= random.randrange(v.bug_number)
+                        v.weed_appear_prob = max(0, v.weed_appear_prob - random.random())
+                        v.bug_appear_prob = max(0, v.bug_appear_prob - random.random())
+                    print("收到的作物")
+                    harvest.show()
+                    player.bag.add(harvest)
                 elif option == "4":
-                    pass
+                    print(f"你的除草劑數量: {player.bag["herbicide"]}")
+                    f = input("[1.除草劑][2.手動][3.取消](註:手動除草效果較除草劑差):")
+                    if f == "1":
+                        if player.bag["herbicide"] < len(c):
+                            print(f"你的除草劑數量不足")
+                            continue
+                        player.bag["herbicide"] -= len(c)
+                        for i in c:
+                            v = player.farmland[i]
+                            v.organic = False
+                            v.weed_appear = False
+                            v.weed_appear_prob = max(0, v.weed_appear_prob - random.random())
+                    elif f == "2":
+                        for i in c:
+                            v = player.farmland[i]
+                            v.weed_appear = random.choice((False, True))
+                            v.weed_appear_prob = max(0, v.weed_appear_prob - random.random() / 2)
+                    elif f == "3":
+                        continue
+                    else:
+                        print("輸入錯誤")
+                        continue
                 elif option == "5":
-                    pass
+                    print(f"你的殺蟲劑數量: {player.bag["insecticide"]}")
+                    f = input("[1.殺蟲劑][2.手動][3.取消](註:手動殺蟲效果較殺蟲劑差):")
+                    if f == "1":
+                        if player.bag["insecticide"] < len(c):
+                            print(f"你的殺蟲劑數量不足")
+                            continue
+                        player.bag["insecticide"] -= len(c)
+                        for i in c:
+                            v = player.farmland[i]
+                            v.organic = False
+                            v.bug_number -= random.randrange(v.bug_number)
+                            v.bug_appear_prob = max(0, v.bug_appear_prob - random.random())
+                    elif f == "2":
+                        for i in c:
+                            v = player.farmland[i]
+                            v.bug_number -= random.randrange(v.bug_number) // 2
+                            v.bug_appear_prob = max(0, v.bug_appear_prob - random.random() / 2)
+                    elif f == "3":
+                        continue
+                    else:
+                        print("輸入錯誤")
+                        continue
                 elif option == "6":
                     farm_info = table(["編號", "作物", "生長時間", "地力", "新蟲子出現機率", "蟲子數量", "雜草出現機率", "雜草出現", "可收成", "有機"])
                     for i, v in enumerate(player.farmland):
                         if v.crop == "":
                             farm_info.add([i, "Null", "0/0", v.soil_fertility, "0%", 0, "0%", False, False, True])
                         else:
-                            farm_info([i, TEXT[v.crop], f"{v.growth_time}/{CROPS[v.crop]["growth_time"]}", v.soil_fertility, f"{round(v.bug_appear*100, 2)}%", v.bug_number, f"{round(v.weed_appear_prob*100, 2)}%", v.weed_appear, v.ripe, v.organic])
+                            farm_info([i, TEXT[v.crop], f"{v.growth_time}/{CROPS[v.crop]["growth_time"]}", v.soil_fertility, f"{round(v.bug_appear_prob*100, 2)}%", v.bug_number, f"{round(v.weed_appear_prob*100, 2)}%", v.weed_appear, v.ripe, v.organic])
                     farm_info.show()
                 elif option == "7":
                     break
@@ -215,7 +274,7 @@ def main(player: Player) -> None:
                     if v.crop == "":
                         farm_info.add([i, "Null", "0/0", v.soil_fertility, "0%", 0, "0%", False, False, True])
                     else:
-                        farm_info([i, TEXT[v.crop], f"{v.growth_time}/{CROPS[v.crop]["growth_time"]}", v.soil_fertility, f"{round(v.bug_appear*100, 2)}%", v.bug_number, f"{round(v.weed_appear_prob*100, 2)}%", v.weed_appear, v.ripe, v.organic])
+                        farm_info([i, TEXT[v.crop], f"{v.growth_time}/{CROPS[v.crop]["growth_time"]}", v.soil_fertility, f"{round(v.bug_appear_prob*100, 2)}%", v.bug_number, f"{round(v.weed_appear_prob*100, 2)}%", v.weed_appear, v.ripe, v.organic])
                 farm_info.show()
             elif option == "3":
                 return
