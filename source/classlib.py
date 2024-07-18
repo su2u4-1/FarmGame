@@ -5,15 +5,25 @@ import json5
 from wcwidth import wcswidth
 
 
-__all__ = ["init", "Bag", "Player", "TEXT", "DATA", "CROPS", "ANIMALS", "table"]
+__all__ = ["init", "Bag", "Player", "Table", "My_dict"]
 N = dict[str : dict[str : int | list[str]]]
-TEXT: dict[str:str] = {}
-DATA: dict[str : N | list[str]] = {}
-CROPS: N = {}
-ANIMALS: N = {}
 
 
-def init(root: str, language: str = "en") -> None:
+class My_dict(dict):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def __getitem__(self, key: str) -> str:
+        if key in self:
+            return super().__getitem__(key)
+        else:
+            return super().__getitem__("text_not_found").format(key)
+
+    def __setitem__(self, key: str, value: str) -> None:
+        raise RuntimeError("No text changes allowed")
+
+
+def init(root: str, language: str = "en") -> tuple[My_dict[str:str], dict[str : N | list[str]], N, N]:
     global TEXT, DATA, CROPS, ANIMALS
     path = os.path.join(root, "data", f"data.json5")
     with open(path, "r") as f:
@@ -23,11 +33,12 @@ def init(root: str, language: str = "en") -> None:
     path = os.path.join(root, "data", f"{language}.json5")
     if os.path.isfile(path):
         with open(path, "r") as f:
-            TEXT = json5.load(f)
+            TEXT = My_dict(json5.load(f))
     else:
         path = os.path.join(root, "data", f"{DATA["language_list"][0]}.json5")
         with open(path, "r") as f:
-            TEXT = json5.load(f)
+            TEXT = My_dict(json5.load(f))
+    return TEXT, DATA, CROPS, ANIMALS
 
 
 class Bag(dict):
@@ -52,18 +63,18 @@ class Bag(dict):
     def show(self, mode: str = "default") -> None:
         if mode == "seed":
             if sum(1 if k in DATA["seed"] else 0 for k in self.keys()) == 0:
-                print("空無一物")
+                print(TEXT["bag_0"])
             else:
-                bag_item = table(["編號", "名稱", "數量"])
+                bag_item = Table(TEXT["bag_1"])
                 for k, v in self.items():
                     if k in DATA["seed"]:
                         bag_item.add([DATA["seed"][k]["id"], TEXT[k], v])
                 bag_item.show()
         else:
             if len(self) == 0:
-                print("空無一物")
+                print(TEXT["bag_0"])
             else:
-                bag_item = table(["編號", "名稱", "數量"])
+                bag_item = Table(TEXT["bag_1"])
                 for k, v in self.items():
                     if k in CROPS:
                         bag_item.add([CROPS[k]["id"], TEXT[k], v])
@@ -96,14 +107,14 @@ class farmland:
             if random() <= self.weed_appear_prob:
                 self.weed_appear = True
             if self.weed_appear:
-                print(f"你的{TEXT[self.crop]}無法生長，因為出現雜草")
+                print(TEXT["class_0"].format(TEXT[self.crop]))
             elif self.growth_time != -1:
                 self.growth_time += 1
             self.bug_appear_prob += random() / 10
             if random() <= self.bug_appear_prob:
                 self.bug_number += 1
             if self.bug_number > CROPS[self.crop]["pest_resistance"]:
-                print(f"你的{TEXT[self.crop]}死掉了，因為蟲子過多")
+                print(TEXT["class_1"].format(TEXT[self.crop]))
                 self.growth_time = -1
             if CROPS[self.crop]["growth_time"] >= self.growth_time:
                 self.ripe = True
@@ -121,7 +132,7 @@ class corral:
         if ANIMALS[self.animal]["required_neatness"] >= self.neatness:
             self.growth_time += 1
         if self.neatness < 0:
-            print(f"你的{TEXT[self.animal]}死掉了，因為環境太過髒亂")
+            print(TEXT["class_2"].format(TEXT[self.animal]))
 
 
 class Player:
@@ -132,17 +143,14 @@ class Player:
         self.corral: list[corral] = [corral()]
         self.farmland: list[farmland] = [farmland()] * 5
         self.day = 1
-        self.stamina = 10
-        self.stamina_recovery_speed = 10
-        self.stamina_max = 20
 
     def save_archive(self, root: str) -> bool:
-        name = input("存檔名稱(輸入-1取消):")
+        name = input(TEXT["class_3"])
         if name == "-1":
             return False
         path = os.path.join(root, "archive", name) + ".json5"
         if os.path.isfile(path):
-            option = input("存檔已存在，是否要覆蓋(Yes/No):")
+            option = input(TEXT["class_4"])
             if option != "Yes" and option != "yes" and option != "y" and option != "Y":
                 return False
         with open(path, "+w") as f:
@@ -179,8 +187,10 @@ class Player:
                 self.__dict__[k] = v
 
 
-class table:
-    def __init__(self, title: list) -> None:
+class Table:
+    def __init__(self, title: list | str) -> None:
+        if type(title) == str:
+            title = title.split("|")
         self.data = [title]
         self.length = [wcswidth(str(i)) for i in title]
         self.n = len(title)

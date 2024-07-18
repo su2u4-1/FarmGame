@@ -212,20 +212,11 @@
         chemical_fertilizer: {
             id: 31,
         },
-        energy_drink_small: {
+        insecticide: {
             id: 32,
         },
-        energy_drink_medium: {
-            id: 33,
-        },
-        energy_drink_large: {
-            id: 34,
-        },
-        insecticide: {
-            id: 35,
-        },
         herbicide: {
-            id: 36,
+            id: 33,
         }
     },
     language_list: [
