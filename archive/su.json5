@@ -1,1 +1,70 @@
-{name: "su", money: 0, bag: {}, corral_n: 1, farmland_n: 5, day: 1, stamina: 10, stamina_max: 20}
+{
+    name: "su",
+    money: 0,
+    bag: {},
+    farmland: [
+        {
+            crop: "",
+            growth_time: 0,
+            soil_fertility: 10,
+            bug_appear_prob: 0.1,
+            bug_number: 0,
+            weed_appear_prob: 0.1,
+            weed_appear: false,
+            ripe: false,
+            organic: true
+        },
+        {
+            crop: "",
+            growth_time: 0,
+            soil_fertility: 10,
+            bug_appear_prob: 0.1,
+            bug_number: 0,
+            weed_appear_prob: 0.1,
+            weed_appear: false,
+            ripe: false,
+            organic: true
+        },
+        {
+            crop: "",
+            growth_time: 0,
+            soil_fertility: 10,
+            bug_appear_prob: 0.1,
+            bug_number: 0,
+            weed_appear_prob: 0.1,
+            weed_appear: false,
+            ripe: false,
+            organic: true
+        },
+        {
+            crop: "",
+            growth_time: 0,
+            soil_fertility: 10,
+            bug_appear_prob: 0.1,
+            bug_number: 0,
+            weed_appear_prob: 0.1,
+            weed_appear: false,
+            ripe: false,
+            organic: true},
+        {
+            crop: "",
+            growth_time: 0,
+            soil_fertility: 10,
+            bug_appear_prob: 0.1,
+            bug_number: 0,
+            weed_appear_prob: 0.1,
+            weed_appear: false,
+            ripe: false,
+            organic: true
+        },
+    ],
+    corral: [
+        {
+            animal: "",
+            growth_time: 0,
+            neatness: 10,
+            manger: []
+        },
+    ],
+    day: 1
+}

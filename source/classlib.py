@@ -89,7 +89,7 @@ class Bag(dict):
             self[k] += v
 
 
-class farmland:
+class Farmland:
     def __init__(self):
         self.crop = ""
         self.growth_time = 0
@@ -120,7 +120,7 @@ class farmland:
                 self.ripe = True
 
 
-class corral:
+class Corral:
     def __init__(self):
         self.animal = ""
         self.growth_time = 0
@@ -140,8 +140,8 @@ class Player:
         self.name = name
         self.money = 0
         self.bag: Bag[str, int] = Bag()
-        self.corral: list[corral] = [corral()]
-        self.farmland: list[farmland] = [farmland()] * 5
+        self.farmland: list[Farmland] = [Farmland()] * 5
+        self.corral: list[Corral] = [Corral()]
         self.day = 1
 
     def save_archive(self, root: str) -> bool:
@@ -163,23 +163,24 @@ class Player:
             if k == "farmland" or k == "corral":
                 t[k] = []
                 for i in v:
-                    t[k].append(i.__dict__())
+                    t[k].append(i.__dict__)
             elif k == "bag":
                 t[k] = dict(v)
             else:
                 t[k] = v
+        return t
 
     def load(self, data: dict) -> None:
         for k, v in data.items():
             if k == "farmland":
                 self.__dict__[k] = []
                 for i in v:
-                    self.__dict__[k].append(farmland())
+                    self.__dict__[k].append(Farmland())
                     self.__dict__[k][-1].__dict__.update(i)
             elif k == "corral":
                 self.__dict__[k] = []
                 for i in v:
-                    self.__dict__[k].append(corral())
+                    self.__dict__[k].append(Corral())
                     self.__dict__[k][-1].__dict__.update(i)
             elif k == "bag":
                 self.__dict__[k] = Bag(v)
@@ -197,7 +198,7 @@ class Table:
 
     def add(self, d: list) -> None:
         if len(d) != self.n:
-            raise ValueError("The length is different from the information above.")
+            raise ValueError(f"The length is different from the information above.\ntitle: {self.data[0]}\nnew: {d}")
         self.data.append(d)
         for i in range(self.n):
             self.length[i] = max(self.length[i], wcswidth(str(d[i])))

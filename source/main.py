@@ -1,6 +1,7 @@
 import os.path
-import json5
 import random
+from typing import Literal
+import json5
 from classlib import *
 
 
@@ -72,7 +73,7 @@ def other(player: Player) -> None:
             print(TEXT["other_3"])
         else:
             print(TEXT["other_4"])
-            other()
+            other(player)
     elif option == "3":
         f = input(TEXT["other_5"])
         if f == "Yes" or f == "yes" or f == "y" or f == "Y":
@@ -215,7 +216,7 @@ def farm_op(c: list[int], player: Player) -> None:
                 if v.crop == "":
                     farm_info.add([i, "Null", "0/0", v.soil_fertility, "0%", 0, "0%", False, False, True])
                 else:
-                    farm_info([i, TEXT[v.crop], f"{v.growth_time}/{CROPS[v.crop]["growth_time"]}", v.soil_fertility, f"{round(v.bug_appear_prob*100, 2)}%", v.bug_number, f"{round(v.weed_appear_prob*100, 2)}%", v.weed_appear, v.ripe, v.organic])
+                    farm_info.add([i, TEXT[v.crop], f"{v.growth_time}/{CROPS[v.crop]["growth_time"]}", v.soil_fertility, f"{round(v.bug_appear_prob*100, 2)}%", v.bug_number, f"{round(v.weed_appear_prob*100, 2)}%", v.weed_appear, v.ripe, v.organic])
             farm_info.show()
         elif option == "7":
             break
@@ -223,15 +224,30 @@ def farm_op(c: list[int], player: Player) -> None:
             print(TEXT["input_error"])
 
 
-def farmland(player: Player) -> None:
+def corral_op(c: list[int], player: Player) -> None:
+    pass  # 施工中
+
+
+def farmland_corral_op(c: list[int], player: Player, mode: Literal["farmland", "corral"]) -> None:
+    if mode == "farmland":
+        farm_op(c, player)
+    else:
+        corral_op(c, player)
+
+
+def manage(player: Player, mode: Literal["farmland", "corral"]) -> None:
+    if mode == "farmland":
+        l = player.farmland
+    else:
+        l = player.corral
     while True:
-        option = input(TEXT["farmland_0"])
+        option = input(TEXT[f"{mode}_0"])
         if option == "1":
-            n = input(TEXT["farmland_1"])
+            n = input(TEXT[f"{mode}_1"])
             if n == "-1":
                 continue
             elif n == "all":
-                farm_op(list(range(len(player.farmland))), player)
+                farmland_corral_op(list(range(len(l))), player, mode)
             elif "~" in n:
                 n.replace(" ", "")
                 n = n.split("~", 1)
@@ -243,49 +259,44 @@ def farmland(player: Player) -> None:
                     continue
                 if n[0] > n[1]:
                     n[0], n[1] = n[1], n[0]
-                if 0 > n[0] or n[0] >= len(player.farmland):
-                    print(TEXT["farmland_2"].format(n[0]))
+                if 0 > n[0] or n[0] >= len(l):
+                    print(TEXT[f"{mode}_2"].format(n[0]))
                     continue
-                if 0 > n[1] or n[1] >= len(player.farmland):
-                    print(TEXT["farmland_2"].format(n[1]))
+                if 0 > n[1] or n[1] >= len(l):
+                    print(TEXT[f"{mode}_2"].format(n[1]))
                     continue
-                farm_op(list(range(n[0], n[1] + 1)), player)
+                farmland_corral_op(list(range(n[0], n[1] + 1)), player, mode)
             else:
                 n = n.split()
-                if len(n) == 1:
-                    try:
-                        n = int(n[0])
-                    except:
-                        print(TEXT["input_not_int"])
-                        continue
-                    if 0 > n or n >= len(player.farmland):
-                        print(TEXT["farmland_2"].format(n))
-                        continue
-                    farm_op([n], player)
-                    continue
                 c = []
-                for i in len(n):
+                for i in range(len(n)):
                     try:
                         n[i] = int(n[i])
                     except:
                         print(TEXT["input_not_int"])
                         break
-                    if 0 <= n[i] < len(player.farmland):
+                    if 0 <= n[i] < len(l):
                         c.append(n[i])
                     else:
-                        print(TEXT["farmland_2"].format(n[i]))
+                        print(TEXT[f"{mode}_2"].format(n[i]))
                         break
                 else:
-                    farm_op(c, player)
+                    farmland_corral_op(c, player, mode)
         elif option == "2":
-            print(TEXT["farmland_3"], len(player.farmland))
-            farm_info = Table(TEXT["farm_info"])
-            for i, v in enumerate(player.farmland):
-                if v.crop == "":
-                    farm_info.add([i, "Null", "0/0", v.soil_fertility, "0%", 0, "0%", False, False, True])
-                else:
-                    farm_info([i, TEXT[v.crop], f"{v.growth_time}/{CROPS[v.crop]["growth_time"]}", v.soil_fertility, f"{round(v.bug_appear_prob*100, 2)}%", v.bug_number, f"{round(v.weed_appear_prob*100, 2)}%", v.weed_appear, v.ripe, v.organic])
-            farm_info.show()
+            print(TEXT[f"{mode}_3"], len(l))
+            info = Table(TEXT[f"{mode}_info"])
+            for i, v in enumerate(l):
+                if mode == "farmland":
+                    if v.crop == "":
+                        info.add([i, "Null", "0/0", v.soil_fertility, "0%", 0, "0%", False, False, True])
+                    else:
+                        info.add([i, TEXT[v.crop], f"{v.growth_time}/{CROPS[v.crop]["growth_time"]}", v.soil_fertility, f"{round(v.bug_appear_prob*100, 2)}%", v.bug_number, f"{round(v.weed_appear_prob*100, 2)}%", v.weed_appear, v.ripe, v.organic])
+                else:  # 施工中
+                    if v.animal == "":
+                        info.add([i, "Null", "Null", "Null"])
+                    else:
+                        info.add([i, TEXT[v.animal], "Null", "Null"])
+            info.show()
         elif option == "3":
             return
         else:
@@ -308,9 +319,9 @@ def main(player: Player) -> None:
     while True:
         option = input(TEXT["main_1"])
         if option == "1":
-            farmland(player)
+            manage(player, "farmland")
         elif option == "2":
-            pass
+            manage(player, "corral")
         elif option == "3":
             pass
         elif option == "4":
