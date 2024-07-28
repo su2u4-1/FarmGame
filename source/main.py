@@ -225,7 +225,32 @@ def farm_op(c: list[int], player: Player) -> None:
 
 
 def corral_op(c: list[int], player: Player) -> None:
-    pass  # 施工中
+    # 施工中
+    while True:
+        option = input("[1.動物][2.餵食][3.屠宰/處死][4.打掃][5.治療][6.資訊][7.離開]:")
+        if option == "1":
+            pass
+        elif option == "2":
+            pass
+        elif option == "3":
+            pass
+        elif option == "4":
+            pass
+        elif option == "5":
+            pass
+        elif option == "6":
+            corral_info = Table(["編號", "動物", "生長時間", "飢餓", "整潔", "健康程度", "患病機率", "患病", "長成"])
+            for i in c:
+                v = player.corral[i]
+                if v.animal == "":
+                    corral_info.add([i, "Null", "0/0", 0, v.neatness, "100%", "0%", False, False])
+                else:
+                    corral_info.add([i, TEXT[v.animal], f"{v.growth_time}/{ANIMALS[v.animal]["growth_time"]}", v.hunger, v.neatness, v.health, f"{round(v.sick_prob*100, 2)}%", v.sick, v.grow_up])
+            corral_info.show()
+        elif option == "7":
+            break
+        else:
+            print(TEXT["input_error"])
 
 
 def farmland_corral_op(c: list[int], player: Player, mode: Literal["farmland", "corral"]) -> None:
@@ -291,11 +316,11 @@ def manage(player: Player, mode: Literal["farmland", "corral"]) -> None:
                         info.add([i, "Null", "0/0", v.soil_fertility, "0%", 0, "0%", False, False, True])
                     else:
                         info.add([i, TEXT[v.crop], f"{v.growth_time}/{CROPS[v.crop]["growth_time"]}", v.soil_fertility, f"{round(v.bug_appear_prob*100, 2)}%", v.bug_number, f"{round(v.weed_appear_prob*100, 2)}%", v.weed_appear, v.ripe, v.organic])
-                else:  # 施工中
+                else:
                     if v.animal == "":
-                        info.add([i, "Null", "Null", "Null"])
+                        info.add([i, "Null", "0/0", 0, v.neatness, "100%", "0%", False, False])
                     else:
-                        info.add([i, TEXT[v.animal], "Null", "Null"])
+                        info.add([i, TEXT[v.animal], f"{v.growth_time}/{ANIMALS[v.animal]["growth_time"]}", v.hunger, v.neatness, v.health, f"{round(v.sick_prob*100, 2)}%", v.sick, v.grow_up])
             info.show()
         elif option == "3":
             return

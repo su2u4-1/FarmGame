@@ -126,13 +126,35 @@ class Corral:
         self.growth_time = 0
         self.neatness = 10
         self.manger = []
+        self.health = 100
+        self.sick = False
+        self.sick_prob = 0.1
+        self.grow_up = False
+        self.hunger = 0
 
     def next_day(self) -> None:
-        self.neatness -= random()
-        if ANIMALS[self.animal]["required_neatness"] >= self.neatness:
-            self.growth_time += 1
-        if self.neatness < 0:
-            print(TEXT["class_2"].format(TEXT[self.animal]))
+        if self.animal != "":
+            self.neatness -= random() / 10
+            if self.neatness < 0:
+                self.health -= random() * abs(self.neatness) * 10
+            self.sick_prob += random() / 10
+            if random() <= self.sick_prob:
+                self.sick = True
+            if self.sick:
+                self.health -= random() * 10
+            if self.health <= 0:
+                print(TEXT["class_2"].format(TEXT[self.animal]))
+                self.growth_time = -1
+            if ANIMALS[self.animal]["required_neatness"] >= self.neatness and not self.sick and self.growth_time != -1:
+                self.growth_time += 1
+            if ANIMALS[self.animal]["growth_time"] >= self.growth_time:
+                self.grow_up = True
+            self.hunger -= 1
+            if self.sick:
+                self.hunger -= 1
+            if self.hunger <= 0:
+                print(TEXT["class_5"].format(TEXT[self.animal]))
+                self.growth_time = -1
 
 
 class Player:
