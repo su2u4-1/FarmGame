@@ -1,15 +1,15 @@
 import os.path
 from random import random
-from typing import Self
+from typing import Self, Any
 import json5
 from wcwidth import wcswidth
 
 
 __all__ = ["init", "Bag", "Player", "Table", "My_dict"]
-N = dict[str : dict[str : int | list[str]]]
+N = dict[str, dict[str, int | list[str]]]
 
 
-class My_dict(dict):
+class My_dict(dict[str, str]):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -23,7 +23,7 @@ class My_dict(dict):
         raise RuntimeError("No text changes allowed")
 
 
-def init(root: str, language: str = "en") -> tuple[My_dict[str:str], dict[str : N | list[str]], N, N]:
+def init(root: str, language: str = "en") -> tuple[My_dict, dict[str, N | list[str]], N, N]:
     global TEXT, DATA, CROPS, ANIMALS
     path = os.path.join(root, "data", f"data.json5")
     with open(path, "r") as f:
@@ -41,7 +41,7 @@ def init(root: str, language: str = "en") -> tuple[My_dict[str:str], dict[str : 
     return TEXT, DATA, CROPS, ANIMALS
 
 
-class Bag(dict):
+class Bag(dict[str, int]):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -84,7 +84,7 @@ class Bag(dict):
                         bag_item.add([ANIMALS[k]["id"], TEXT[k], v])
                 bag_item.show()
 
-    def add(self, other: Self | dict) -> None:
+    def add(self, other: Self | dict[str, int]) -> None:
         for k, v in other.items():
             self[k] += v
 
@@ -161,9 +161,9 @@ class Player:
     def __init__(self, name: str) -> None:
         self.name = name
         self.money = 0
-        self.bag: Bag[str, int] = Bag()
-        self.farmland: list[Farmland] = [Farmland()] * 5
-        self.corral: list[Corral] = [Corral()]
+        self.bag = Bag()
+        self.farmland = [Farmland()] * 5
+        self.corral = [Corral()]
         self.day = 1
 
     def save_archive(self, root: str) -> bool:
@@ -179,7 +179,7 @@ class Player:
             f.write(json5.dumps(self.serialize()))
         return True
 
-    def serialize(self) -> dict:
+    def serialize(self) -> dict[str, Any]:
         t = {}
         for k, v in self.__dict__.items():
             if k == "farmland" or k == "corral":
@@ -192,7 +192,7 @@ class Player:
                 t[k] = v
         return t
 
-    def load(self, data: dict) -> None:
+    def load(self, data: dict[str, Any]) -> None:
         for k, v in data.items():
             if k == "farmland":
                 self.__dict__[k] = []
@@ -211,14 +211,14 @@ class Player:
 
 
 class Table:
-    def __init__(self, title: list | str) -> None:
+    def __init__(self, title: list[object] | str) -> None:
         if type(title) == str:
             title = title.split("|")
         self.data = [title]
         self.length = [wcswidth(str(i)) for i in title]
         self.n = len(title)
 
-    def add(self, d: list) -> None:
+    def add(self, d: list[object]) -> None:
         if len(d) != self.n:
             raise ValueError(f"The length is different from the information above.\ntitle: {self.data[0]}\nnew: {d}")
         self.data.append(d)

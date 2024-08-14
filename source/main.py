@@ -5,15 +5,12 @@ import json5
 from classlib import *
 
 
-N = dict[str : dict[str : int | list[str]]]
-TEXT: My_dict[str:str]
-DATA: dict[str : N | list[str]]
-CROPS: N
-ANIMALS: N
+N = dict[str, dict[str, int | list[str]]]
+DATA: dict[str, N | list[str]]
 
 
 def start() -> None:
-    def open_archive() -> Player:
+    def open_archive() -> Player | None:
         name = input(TEXT["start_0"])
         if name == "-1":
             return None
@@ -28,7 +25,7 @@ def start() -> None:
         print(TEXT["start_2"].format(player.name))
         return player
 
-    def create_archive() -> Player:
+    def create_archive() -> Player | None:
         name = input(TEXT["start_3"])
         if name == "-1":
             return None
@@ -143,9 +140,9 @@ def farm_op(c: list[int], player: Player) -> None:
                 if not t:
                     v.organic = False
                 if t:
-                    v.bug_appear_prob += random() / 10
+                    v.bug_appear_prob += random.random() / 10
                 else:
-                    v.weed_appear_prob += random() / 10
+                    v.weed_appear_prob += random.random() / 10
         elif option == "3":
             print(TEXT["farm_op_8"])
             harvest = Bag()
