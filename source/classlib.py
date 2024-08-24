@@ -1,5 +1,5 @@
 import os.path
-from random import random
+import random
 from typing import Self, Any
 import json5
 from wcwidth import wcswidth
@@ -23,13 +23,11 @@ class My_dict(dict[str, str]):
         raise RuntimeError("No text changes allowed")
 
 
-def init(root: str, language: str = "en") -> tuple[My_dict, dict[str, N | list[str]], N, N]:
-    global TEXT, DATA, CROPS, ANIMALS
+def init(root: str, language: str = "en") -> tuple[My_dict, dict[str, N | list[str]]]:
+    global TEXT, DATA
     path = os.path.join(root, "data", f"data.json5")
     with open(path, "r") as f:
         DATA = json5.load(f)
-    CROPS = DATA["crops"]
-    ANIMALS = DATA["animals"]
     path = os.path.join(root, "data", f"{language}.json5")
     if os.path.isfile(path):
         with open(path, "r") as f:
@@ -38,7 +36,7 @@ def init(root: str, language: str = "en") -> tuple[My_dict, dict[str, N | list[s
         path = os.path.join(root, "data", f"{DATA["language_list"][0]}.json5")
         with open(path, "r") as f:
             TEXT = My_dict(json5.load(f))
-    return TEXT, DATA, CROPS, ANIMALS
+    return TEXT, DATA
 
 
 class Bag(dict[str, int]):
@@ -61,14 +59,14 @@ class Bag(dict[str, int]):
             raise RuntimeError(f"Item {key} quantity is negative.")
 
     def show(self, mode: str = "default") -> None:
-        if mode == "seed":
-            if sum(1 if k in DATA["seed"] else 0 for k in self.keys()) == 0:
+        if mode == "seed" or mode == "crops" or mode == "animals":
+            if sum(1 if k in DATA[mode] else 0 for k in self.keys()) == 0:
                 print(TEXT["bag_0"])
             else:
                 bag_item = Table(TEXT["bag_1"])
                 for k, v in self.items():
-                    if k in DATA["seed"]:
-                        bag_item.add([DATA["seed"][k]["id"], TEXT[k], v])
+                    if k in DATA[mode]:
+                        bag_item.add([DATA[mode][k]["id"], TEXT[k], v])
                 bag_item.show()
         else:
             if len(self) == 0:
@@ -76,17 +74,39 @@ class Bag(dict[str, int]):
             else:
                 bag_item = Table(TEXT["bag_1"])
                 for k, v in self.items():
-                    if k in CROPS:
-                        bag_item.add([CROPS[k]["id"], TEXT[k], v])
+                    if k in DATA["crops"]:
+                        bag_item.add([DATA["crops"][k]["id"], TEXT[k], v])
                     if k in DATA["seed"]:
                         bag_item.add([DATA["seed"][k]["id"], TEXT[k], v])
-                    if k in ANIMALS:
-                        bag_item.add([ANIMALS[k]["id"], TEXT[k], v])
+                    if k in DATA["animals"]:
+                        bag_item.add([DATA["animals"][k]["id"], TEXT[k], v])
                 bag_item.show()
 
     def add(self, other: Self | dict[str, int]) -> None:
         for k, v in other.items():
             self[k] += v
+
+    def find(self, range: str, n: int) -> tuple[str, bool]:
+        self.show(range)
+        select = input("所選物品id(輸入-1取消):")
+        if select == "-1":
+            return "", False
+        try:
+            select = int(select)
+        except:
+            print(TEXT["input_not_int"])
+            return "", False
+        for i in self:
+            if DATA[range][i]["id"] == select:
+                if self[i] < n:
+                    print("物品數量過少")
+                    return "", False
+                select = i
+                self[i] -= n
+                return select, True
+        else:
+            print("所選物品不存在")
+            return "", False
 
 
 class Farmland:
@@ -103,20 +123,20 @@ class Farmland:
 
     def next_day(self) -> None:
         if self.crop != "":
-            self.weed_appear_prob += random() / 10
-            if random() <= self.weed_appear_prob:
+            self.weed_appear_prob += random.random() / 10
+            if random.random() <= self.weed_appear_prob:
                 self.weed_appear = True
             if self.weed_appear:
                 print(TEXT["class_0"].format(TEXT[self.crop]))
             elif self.growth_time != -1:
                 self.growth_time += 1
-            self.bug_appear_prob += random() / 10
-            if random() <= self.bug_appear_prob:
+            self.bug_appear_prob += random.random() / 10
+            if random.random() <= self.bug_appear_prob:
                 self.bug_number += 1
-            if self.bug_number > CROPS[self.crop]["pest_resistance"]:
+            if self.bug_number > DATA["crops"][self.crop]["pest_resistance"]:
                 print(TEXT["class_1"].format(TEXT[self.crop]))
                 self.growth_time = -1
-            if CROPS[self.crop]["growth_time"] >= self.growth_time:
+            if DATA["crops"][self.crop]["growth_time"] >= self.growth_time:
                 self.ripe = True
 
 
@@ -134,27 +154,37 @@ class Corral:
 
     def next_day(self) -> None:
         if self.animal != "":
-            self.neatness -= random() / 10
+            self.neatness -= random.random() / 10
             if self.neatness < 0:
-                self.health -= random() * abs(self.neatness) * 10
-            self.sick_prob += random() / 10
-            if random() <= self.sick_prob:
+                self.health -= random.random() * abs(self.neatness) * 10
+            self.sick_prob += random.random() / 10
+            if random.random() <= self.sick_prob:
                 self.sick = True
             if self.sick:
-                self.health -= random() * 10
+                self.health -= random.random() * 10
             if self.health <= 0:
                 print(TEXT["class_2"].format(TEXT[self.animal]))
                 self.growth_time = -1
-            if ANIMALS[self.animal]["required_neatness"] >= self.neatness and not self.sick and self.growth_time != -1:
+            if DATA["animals"][self.animal]["required_neatness"] >= self.neatness and not self.sick and self.growth_time != -1:
                 self.growth_time += 1
-            if ANIMALS[self.animal]["growth_time"] >= self.growth_time:
+            if DATA["animals"][self.animal]["growth_time"] >= self.growth_time:
                 self.grow_up = True
+            for _ in range(random.randrange(5) + 1):
+                if len(self.manger) > 0:
+                    self.eat()
             self.hunger -= 1
             if self.sick:
                 self.hunger -= 1
             if self.hunger <= 0:
                 print(TEXT["class_5"].format(TEXT[self.animal]))
                 self.growth_time = -1
+
+    def eat(self):
+        for i in self.manger:
+            if i in DATA["animals"][self.animal]["food"]:
+                self.manger.remove(i)
+                self.hunger += 1
+                return
 
 
 class Player:

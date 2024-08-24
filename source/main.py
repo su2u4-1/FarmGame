@@ -53,7 +53,7 @@ def start() -> None:
 
 
 def other(player: Player) -> None:
-    global TEXT, DATA, CROPS, ANIMALS
+    global TEXT, DATA
     option = input(TEXT["other_0"])
     if option == "1":
         while True:
@@ -62,7 +62,7 @@ def other(player: Player) -> None:
                 print(i)
             language = input(TEXT["other_2"])
             if language in DATA["language_list"]:
-                TEXT, DATA, CROPS, ANIMALS = init(root, language)
+                TEXT, DATA = init(root, language)
                 break
             print(TEXT["input_error"])
     elif option == "2":
@@ -88,28 +88,15 @@ def farm_op(c: list[int], player: Player) -> None:
         option = input(TEXT["farm_op_0"])
         if option == "1":
             print(TEXT["farm_op_1"])
-            player.bag.show("seed")
-            select = input(TEXT["farm_op_2"])
-            if select == "-1":
-                continue
-            try:
-                select = int(select)
-            except:
-                print(TEXT["input_not_int"])
-                continue
-            for i in player.bag:
-                if DATA["seed"][i]["id"] == select:
-                    select = i
-                    player.bag[i] -= 1
-                    break
-            else:
-                print(TEXT["farm_op_3"])
+            select, success = player.bag.find("seed", len(c))
+            if not success:
                 continue
             for i in c:
                 v = player.farmland[i]
                 if v.crop != "":
                     f = input(TEXT["farm_op_4"].format(i, TEXT[v.crop]))
                     if f != "Yes" and f != "yes" and f != "y" and f != "Y":
+                        player.bag[select] += 1
                         continue
                 v.weed_appear = False
                 v.bug_number -= random.randrange(v.bug_number)
@@ -144,7 +131,9 @@ def farm_op(c: list[int], player: Player) -> None:
                 else:
                     v.weed_appear_prob += random.random() / 10
         elif option == "3":
-            print(TEXT["farm_op_8"])
+            f = input(TEXT["farm_op_8"])
+            if f != "Yes" and f != "yes" and f != "y" and f != "Y":
+                continue
             harvest = Bag()
             for i in c:
                 v = player.farmland[i]
@@ -213,7 +202,7 @@ def farm_op(c: list[int], player: Player) -> None:
                 if v.crop == "":
                     farm_info.add([i, "Null", "0/0", v.soil_fertility, "0%", 0, "0%", False, False, True])
                 else:
-                    farm_info.add([i, TEXT[v.crop], f"{v.growth_time}/{CROPS[v.crop]["growth_time"]}", v.soil_fertility, f"{round(v.bug_appear_prob*100, 2)}%", v.bug_number, f"{round(v.weed_appear_prob*100, 2)}%", v.weed_appear, v.ripe, v.organic])
+                    farm_info.add([i, TEXT[v.crop], f"{v.growth_time}/{DATA["crops"][v.crop]["growth_time"]}", v.soil_fertility, f"{round(v.bug_appear_prob*100, 2)}%", v.bug_number, f"{round(v.weed_appear_prob*100, 2)}%", v.weed_appear, v.ripe, v.organic])
             farm_info.show()
         elif option == "7":
             break
@@ -222,18 +211,53 @@ def farm_op(c: list[int], player: Player) -> None:
 
 
 def corral_op(c: list[int], player: Player) -> None:
-    # 施工中
     while True:
-        option = input("[1.動物][2.餵食][3.屠宰/處死][4.打掃][5.治療][6.資訊][7.離開]:")
+        option = input("[1.眷養動物][2.餵食][3.屠宰/丟棄][4.打掃][5.治療][6.資訊][7.離開]:")
         if option == "1":
-            pass
+            print("你有的動物幼仔:")
+            select, success = player.bag.find("animal", len(c))
+            if not success:
+                continue
+            for i in c:
+                v = player.corral[i]
+                if v.animal != "":
+                    f = input("邊號{0}畜欄已經有動物{1}，是否要丟棄原本的動物?(Yes/No):".format(i, TEXT[v.animal]))
+                    if f != "Yes" and f != "yes" and f != "y" and f != "Y":
+                        player.bag[select] += 1
+                        continue
+                v.animal = select
+                v.growth_time = 0
+                v.neatness += random.random() / 10
+                v.manger = [i if random.random() > 0.5 else "None" for i in v.manger]
+                while "None" in v.manger:
+                    v.manger.remove("None")
+                v.health = 100
+                v.sick = False
+                v.sick_prob -= random.random() / 10
+                v.grow_up = False
+                v.hunger = 0
         elif option == "2":
-            pass
+            print("你有的作物:")
+            select, success = player.bag.find("crops", len(c))
+            if not success:
+                continue
+            for i in c:
+                v = player.corral[i]
+                if len(v.manger) < 10:
+                    v.manger.append(select)
+                else:
+                    player.bag[select] += 1
         elif option == "3":
-            pass
+            f = input("會把已長成的屠宰，未長成的丟棄，是否要執行[y/n]:")
+            if f != "Yes" and f != "yes" and f != "y" and f != "Y":
+                continue
+            harvest = Bag()
+            # TODO
         elif option == "4":
+            # TODO
             pass
         elif option == "5":
+            # TODO
             pass
         elif option == "6":
             corral_info = Table(["編號", "動物", "生長時間", "飢餓", "整潔", "健康程度", "患病機率", "患病", "長成"])
@@ -242,7 +266,7 @@ def corral_op(c: list[int], player: Player) -> None:
                 if v.animal == "":
                     corral_info.add([i, "Null", "0/0", 0, v.neatness, "100%", "0%", False, False])
                 else:
-                    corral_info.add([i, TEXT[v.animal], f"{v.growth_time}/{ANIMALS[v.animal]["growth_time"]}", v.hunger, v.neatness, v.health, f"{round(v.sick_prob*100, 2)}%", v.sick, v.grow_up])
+                    corral_info.add([i, TEXT[v.animal], f"{v.growth_time}/{DATA["animals"][v.animal]["growth_time"]}", v.hunger, v.neatness, v.health, f"{round(v.sick_prob*100, 2)}%", v.sick, v.grow_up])
             corral_info.show()
         elif option == "7":
             break
@@ -312,12 +336,12 @@ def manage(player: Player, mode: Literal["farmland", "corral"]) -> None:
                     if v.crop == "":
                         info.add([i, "Null", "0/0", v.soil_fertility, "0%", 0, "0%", False, False, True])
                     else:
-                        info.add([i, TEXT[v.crop], f"{v.growth_time}/{CROPS[v.crop]["growth_time"]}", v.soil_fertility, f"{round(v.bug_appear_prob*100, 2)}%", v.bug_number, f"{round(v.weed_appear_prob*100, 2)}%", v.weed_appear, v.ripe, v.organic])
+                        info.add([i, TEXT[v.crop], f"{v.growth_time}/{DATA["crops"][v.crop]["growth_time"]}", v.soil_fertility, f"{round(v.bug_appear_prob*100, 2)}%", v.bug_number, f"{round(v.weed_appear_prob*100, 2)}%", v.weed_appear, v.ripe, v.organic])
                 else:
                     if v.animal == "":
                         info.add([i, "Null", "0/0", 0, v.neatness, "100%", "0%", False, False])
                     else:
-                        info.add([i, TEXT[v.animal], f"{v.growth_time}/{ANIMALS[v.animal]["growth_time"]}", v.hunger, v.neatness, v.health, f"{round(v.sick_prob*100, 2)}%", v.sick, v.grow_up])
+                        info.add([i, TEXT[v.animal], f"{v.growth_time}/{DATA["animals"][v.animal]["growth_time"]}", v.hunger, v.neatness, v.health, f"{round(v.sick_prob*100, 2)}%", v.sick, v.grow_up])
             info.show()
         elif option == "3":
             return
@@ -345,6 +369,7 @@ def main(player: Player) -> None:
         elif option == "2":
             manage(player, "corral")
         elif option == "3":
+            # TODO
             pass
         elif option == "4":
             next_day(player)
@@ -358,5 +383,5 @@ if __name__ == "__main__":
     root = os.path.abspath(".")
     if root.endswith("\\source"):
         root = root[:-7]
-    TEXT, DATA, CROPS, ANIMALS = init(root, "zh-tw")
+    TEXT, DATA = init(root, "zh-tw")
     start()
