@@ -202,7 +202,20 @@ def farm_op(c: list[int], player: Player) -> None:
                 if v.crop == "":
                     farm_info.add([i, "Null", "0/0", v.soil_fertility, "0%", 0, "0%", False, False, True])
                 else:
-                    farm_info.add([i, TEXT[v.crop], f"{v.growth_time}/{DATA["crops"][v.crop]["growth_time"]}", v.soil_fertility, f"{round(v.bug_appear_prob*100, 2)}%", v.bug_number, f"{round(v.weed_appear_prob*100, 2)}%", v.weed_appear, v.ripe, v.organic])
+                    farm_info.add(
+                        [
+                            i,
+                            TEXT[v.crop],
+                            f"{v.growth_time}/{DATA["crops"][v.crop]["growth_time"]}",
+                            v.soil_fertility,
+                            f"{round(v.bug_appear_prob*100, 2)}%",
+                            v.bug_number,
+                            f"{round(v.weed_appear_prob*100, 2)}%",
+                            v.weed_appear,
+                            v.ripe,
+                            v.organic,
+                        ]
+                    )
             farm_info.show()
         elif option == "7":
             break
@@ -266,7 +279,19 @@ def corral_op(c: list[int], player: Player) -> None:
                 if v.animal == "":
                     corral_info.add([i, "Null", "0/0", 0, v.neatness, "100%", "0%", False, False])
                 else:
-                    corral_info.add([i, TEXT[v.animal], f"{v.growth_time}/{DATA["animals"][v.animal]["growth_time"]}", v.hunger, v.neatness, v.health, f"{round(v.sick_prob*100, 2)}%", v.sick, v.grow_up])
+                    corral_info.add(
+                        [
+                            i,
+                            TEXT[v.animal],
+                            f"{v.growth_time}/{DATA["animals"][v.animal]["growth_time"]}",
+                            v.hunger,
+                            v.neatness,
+                            v.health,
+                            f"{round(v.sick_prob*100, 2)}%",
+                            v.sick,
+                            v.grow_up,
+                        ]
+                    )
             corral_info.show()
         elif option == "7":
             break
@@ -336,12 +361,37 @@ def manage(player: Player, mode: Literal["farmland", "corral"]) -> None:
                     if v.crop == "":
                         info.add([i, "Null", "0/0", v.soil_fertility, "0%", 0, "0%", False, False, True])
                     else:
-                        info.add([i, TEXT[v.crop], f"{v.growth_time}/{DATA["crops"][v.crop]["growth_time"]}", v.soil_fertility, f"{round(v.bug_appear_prob*100, 2)}%", v.bug_number, f"{round(v.weed_appear_prob*100, 2)}%", v.weed_appear, v.ripe, v.organic])
+                        info.add(
+                            [
+                                i,
+                                TEXT[v.crop],
+                                f"{v.growth_time}/{DATA["crops"][v.crop]["growth_time"]}",
+                                v.soil_fertility,
+                                f"{round(v.bug_appear_prob*100, 2)}%",
+                                v.bug_number,
+                                f"{round(v.weed_appear_prob*100, 2)}%",
+                                v.weed_appear,
+                                v.ripe,
+                                v.organic,
+                            ]
+                        )
                 else:
                     if v.animal == "":
                         info.add([i, "Null", "0/0", 0, v.neatness, "100%", "0%", False, False])
                     else:
-                        info.add([i, TEXT[v.animal], f"{v.growth_time}/{DATA["animals"][v.animal]["growth_time"]}", v.hunger, v.neatness, v.health, f"{round(v.sick_prob*100, 2)}%", v.sick, v.grow_up])
+                        info.add(
+                            [
+                                i,
+                                TEXT[v.animal],
+                                f"{v.growth_time}/{DATA["animals"][v.animal]["growth_time"]}",
+                                v.hunger,
+                                v.neatness,
+                                v.health,
+                                f"{round(v.sick_prob*100, 2)}%",
+                                v.sick,
+                                v.grow_up,
+                            ]
+                        )
             info.show()
         elif option == "3":
             return
