@@ -1,10 +1,10 @@
-from typing import Callable, Sequence
+from typing import Callable, Sequence, Union
 
 from wcwidth import wcswidth  # type: ignore
 
 
 class Display_info:
-    def __init__(self, title: Sequence[object] | str) -> None:
+    def __init__(self, title: Union[Sequence[object], str]) -> None:
         """
         Initializes the Display_info class with a title.
 
@@ -124,7 +124,7 @@ def display_message(message: str) -> None:
     print(message)
 
 
-def display_info(title: Sequence[object] | str, *items: Sequence[object]) -> None:
+def display_info(title: Union[Sequence[object], str], *items: Sequence[object]) -> None:
     """
     Displays information about a title and its items.
 
