@@ -1,0 +1,122 @@
+{
+    "chicken": {
+        "id": 20,
+        "baby_price": 20,
+        "growth_time": 2,
+        "adult_sell_price": 50,
+        "food": [
+            "wheat",
+            "corn"
+        ],
+        "food_needed_per_day": 1,
+        "required_neatness": 3
+    },
+    "ox": {
+        "id": 21,
+        "baby_price": 50,
+        "growth_time": 7,
+        "adult_sell_price": 150,
+        "food": [
+            "corn",
+            "tomato"
+        ],
+        "food_needed_per_day": 2,
+        "required_neatness": 7
+    },
+    "sheep": {
+        "id": 22,
+        "baby_price": 30,
+        "growth_time": 5,
+        "adult_sell_price": 100,
+        "food": [
+            "carrot",
+            "corn"
+        ],
+        "food_needed_per_day": 2,
+        "required_neatness": 5
+    },
+    "pig": {
+        "id": 23,
+        "baby_price": 40,
+        "growth_time": 6,
+        "adult_sell_price": 120,
+        "food": [
+            "corn",
+            "potato"
+        ],
+        "food_needed_per_day": 3,
+        "required_neatness": 2
+    },
+    "duck": {
+        "id": 24,
+        "baby_price": 25,
+        "growth_time": 3,
+        "adult_sell_price": 60,
+        "food": [
+            "wheat",
+            "tomato"
+        ],
+        "food_needed_per_day": 1,
+        "required_neatness": 4
+    },
+    "rabbit": {
+        "id": 25,
+        "baby_price": 15,
+        "growth_time": 4,
+        "adult_sell_price": 40,
+        "food": [
+            "carrot",
+            "tomato"
+        ],
+        "food_needed_per_day": 1,
+        "required_neatness": 6
+    },
+    "horse": {
+        "id": 26,
+        "baby_price": 70,
+        "growth_time": 10,
+        "adult_sell_price": 200,
+        "food": [
+            "corn",
+            "potato"
+        ],
+        "food_needed_per_day": 3,
+        "required_neatness": 8
+    },
+    "goat": {
+        "id": 27,
+        "baby_price": 35,
+        "growth_time": 6,
+        "adult_sell_price": 110,
+        "food": [
+            "carrot",
+            "onion"
+        ],
+        "food_needed_per_day": 2,
+        "required_neatness": 5
+    },
+    "turkey": {
+        "id": 28,
+        "baby_price": 30,
+        "growth_time": 5,
+        "adult_sell_price": 90,
+        "food": [
+            "wheat",
+            "corn"
+        ],
+        "food_needed_per_day": 1,
+        "required_neatness": 4
+    },
+    "goose": {
+        "id": 29,
+        "baby_price": 25,
+        "growth_time": 3,
+        "adult_sell_price": 70,
+        "food": [
+            "potato",
+            "tomato"
+        ],
+        "food_needed_per_day": 1,
+        "required_neatness": 5
+    }
+}
