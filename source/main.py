@@ -109,9 +109,10 @@ def farm_op(c: list[int], player: Player) -> None:
             f = input(TEXT["farm_op_6"])
             if f == "1":
                 f = "organic_fertilizer"
+                organic = True
             elif f == "2":
                 f = "chemical_fertilizer"
-                t = False
+                organic = False
             elif f == "3":
                 continue
             else:
@@ -124,9 +125,8 @@ def farm_op(c: list[int], player: Player) -> None:
             for i in c:
                 v = player.farmland[i]
                 v.soil_fertility += 1
-                if not t:
-                    v.organic = False
-                if t:
+                v.organic = organic
+                if organic:
                     v.bug_appear_prob += random.random() / 10
                 else:
                     v.weed_appear_prob += random.random() / 10

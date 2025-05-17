@@ -10,7 +10,7 @@ N = dict[str, dict[str, int | list[str]]]
 
 
 class My_dict(dict[str, str]):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
 
     def __getitem__(self, key: str) -> str:
@@ -31,16 +31,17 @@ def init(root: str, language: str = "en") -> tuple[My_dict, dict[str, N | list[s
     path = os.path.join(root, "data", f"{language}.json5")
     if os.path.isfile(path):
         with open(path, "r") as f:
-            TEXT = My_dict(json5.load(f))
+            text = My_dict(json5.load(f))
     else:
         path = os.path.join(root, "data", f"{DATA["language_list"][0]}.json5")
         with open(path, "r") as f:
-            TEXT = My_dict(json5.load(f))
+            text = My_dict(json5.load(f))
+    TEXT = text
     return TEXT, DATA
 
 
 class Bag(dict[str, int]):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any):
         super().__init__(*args, **kwargs)
 
     def __getitem__(self, key: str) -> int:
@@ -145,7 +146,7 @@ class Corral:
         self.animal = ""
         self.growth_time = 0
         self.neatness = 10
-        self.manger = []
+        self.manger: list[str] = []
         self.health = 100
         self.sick = False
         self.sick_prob = 0.1
@@ -210,7 +211,7 @@ class Player:
         return True
 
     def serialize(self) -> dict[str, Any]:
-        t = {}
+        t: dict[str, Any] = {}
         for k, v in self.__dict__.items():
             if k == "farmland" or k == "corral":
                 t[k] = []
@@ -242,10 +243,10 @@ class Player:
 
 class Table:
     def __init__(self, title: list[object] | str) -> None:
-        if type(title) == str:
+        if isinstance(title, str):
             title = title.split("|")
         self.data = [title]
-        self.length = [wcswidth(str(i)) for i in title]
+        self.length: list[int] = [wcswidth(str(i)) for i in title]
         self.n = len(title)
 
     def add(self, d: list[object]) -> None:
