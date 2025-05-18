@@ -1,6 +1,6 @@
 from typing import Callable, Sequence, Union
 
-from wcwidth import wcswidth  # type: ignore
+from wcwidth import wcswidth
 
 
 class Display_info:
