@@ -1,32 +1,12 @@
 {
-    "wheat_seed": {
-        "id": 10
-    },
-    "corn_seed": {
-        "id": 11
-    },
-    "potato_seed": {
-        "id": 12
-    },
-    "tomato_seed": {
-        "id": 13
-    },
-    "carrot_seed": {
-        "id": 14
-    },
-    "strawberry_seed": {
-        "id": 15
-    },
-    "Green_seed": {
-        "id": 16
-    },
-    "spinach_seed": {
-        "id": 17
-    },
-    "onion_seed": {
-        "id": 18
-    },
-    "pumpkin_seed": {
-        "id": 19
-    }
+    "wheat_seed": {},
+    "corn_seed": {},
+    "potato_seed": {},
+    "tomato_seed": {},
+    "carrot_seed": {},
+    "strawberry_seed": {},
+    "Green_seed": {},
+    "spinach_seed": {},
+    "onion_seed": {},
+    "pumpkin_seed": {}
 }
