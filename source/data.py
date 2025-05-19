@@ -1,4 +1,6 @@
 from collections.abc import Mapping
+from json import load
+from typing import Sequence
 
 
 class Item:
@@ -45,9 +47,14 @@ class Text(dict[str, str]):
 
 
 class Data:
-    def __init__(self, text: Text, items: dict[str, Item], seeds: dict[str, Seed], crops: dict[str, Crop], animals: dict[str, Animal]) -> None:
+    def __init__(self, text: Text, items: dict[str, Item], seeds: dict[str, Seed], crops: dict[str, Crop], animals: dict[str, Animal], language: Sequence[str]) -> None:
         self.text = text
         self.items = items
         self.seeds = seeds
         self.crops = crops
         self.animals = animals
+        self.language = tuple(language)
+
+    def update_text(self, path: str) -> None:
+        with open(path, "r", encoding="utf-8") as f:
+            self.text = Text(load(f))
