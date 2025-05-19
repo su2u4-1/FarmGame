@@ -1,4 +1,4 @@
-from typing import Callable, Sequence, Union
+from typing import Callable, Optional, Sequence, Union
 
 from wcwidth import wcswidth
 
@@ -100,6 +100,8 @@ def display_request_and_get_int_input(
     Returns:
         int: The integer input from the user or the stop flag.
     """
+    if not request.endswith(":") and not request.endswith(": "):
+        request += ": "
     while True:
         choice = input(request)
         if stop_condition(choice):
@@ -184,6 +186,8 @@ def display_request_and_get_range_input(
             result.append(j)
         return 0
 
+    if not request.endswith(":") and not request.endswith(": "):
+        request += ": "
     while True:
         choice = input(request)
         if stop_condition(choice):
@@ -240,3 +244,33 @@ def display_info(title: Union[Sequence[object], str], *items: Sequence[object]) 
     for item in items:
         display.add(item)
     display.display()
+
+
+def display_request_and_get_bool_input(request: str, default: Optional[bool] = None, input_err_msg: str = "Please enter 'y' or 'n'.") -> bool:
+    """
+    Displays a request to the user and returns a boolean input.
+
+    Args:
+        request (str): The request message to display.
+        default (bool, optional): The default value if the user presses Enter. Defaults to None.
+        input_err_msg (str): The error message to display for invalid input.
+
+    Returns:
+        bool: The boolean input from the user.
+    """
+    while True:
+        if default is None:
+            request = request + "(y/n): "
+        elif default:
+            request = request + "(Y/n): "
+        else:
+            request = request + "(y/N): "
+        choice = input(request)
+        if choice == "" and default is not None:
+            return default
+        elif choice.lower() in ("y", "yes"):
+            return True
+        elif choice.lower() in ("n", "no"):
+            return False
+        else:
+            print(input_err_msg)
