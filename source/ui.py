@@ -64,16 +64,15 @@ def display_option_and_get_input(
     Returns:
         int: The index of the chosen option.
     """
-    for i, option in enumerate(options):
-        print(f"[{i + 1}.{option}]", end="")
+    show = "".join(f"[{i + 1}.{option.strip()}]" for i, option in enumerate(options)) + ": "
 
     while True:
         try:
-            choice = int(input(": "))
-            if out_range_condition(choice):
-                print(out_range_err_msg)
-            else:
+            choice = int(input(show))
+            if out_range_condition(choice - 1):
                 return choice - 1
+            else:
+                print(out_range_err_msg)
         except ValueError:
             print(input_not_int_err_msg)
 
