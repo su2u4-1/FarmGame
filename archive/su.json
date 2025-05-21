@@ -1,0 +1,149 @@
+{
+    "name": "su",
+    "day": 0,
+    "bag": {
+        "items": {},
+        "seeds": {},
+        "crops": {},
+        "money": 100
+    },
+    "language": "zh-tw",
+    "farmland_size": 6,
+    "farmland": [
+        {
+            "crop": "None",
+            "growth_time": 0,
+            "soil_fertility": 10,
+            "bug_appear_prob": 0.1,
+            "bug_number": 0,
+            "weed_appear_prob": 0.1,
+            "weed_appear": false,
+            "ripe": false,
+            "organic": true
+        },
+        {
+            "crop": "None",
+            "growth_time": 0,
+            "soil_fertility": 10,
+            "bug_appear_prob": 0.1,
+            "bug_number": 0,
+            "weed_appear_prob": 0.1,
+            "weed_appear": false,
+            "ripe": false,
+            "organic": true
+        },
+        {
+            "crop": "None",
+            "growth_time": 0,
+            "soil_fertility": 10,
+            "bug_appear_prob": 0.1,
+            "bug_number": 0,
+            "weed_appear_prob": 0.1,
+            "weed_appear": false,
+            "ripe": false,
+            "organic": true
+        },
+        {
+            "crop": "None",
+            "growth_time": 0,
+            "soil_fertility": 10,
+            "bug_appear_prob": 0.1,
+            "bug_number": 0,
+            "weed_appear_prob": 0.1,
+            "weed_appear": false,
+            "ripe": false,
+            "organic": true
+        },
+        {
+            "crop": "None",
+            "growth_time": 0,
+            "soil_fertility": 10,
+            "bug_appear_prob": 0.1,
+            "bug_number": 0,
+            "weed_appear_prob": 0.1,
+            "weed_appear": false,
+            "ripe": false,
+            "organic": true
+        },
+        {
+            "crop": "None",
+            "growth_time": 0,
+            "soil_fertility": 10,
+            "bug_appear_prob": 0.1,
+            "bug_number": 0,
+            "weed_appear_prob": 0.1,
+            "weed_appear": false,
+            "ripe": false,
+            "organic": true
+        }
+    ],
+    "corral_size": 6,
+    "corral": [
+        {
+            "animal": "None",
+            "growth_time": 0,
+            "neatness": 10,
+            "manger": [],
+            "health": 100,
+            "sick": false,
+            "sick_prob": 0.1,
+            "grow_up": false,
+            "hunger": 0
+        },
+        {
+            "animal": "None",
+            "growth_time": 0,
+            "neatness": 10,
+            "manger": [],
+            "health": 100,
+            "sick": false,
+            "sick_prob": 0.1,
+            "grow_up": false,
+            "hunger": 0
+        },
+        {
+            "animal": "None",
+            "growth_time": 0,
+            "neatness": 10,
+            "manger": [],
+            "health": 100,
+            "sick": false,
+            "sick_prob": 0.1,
+            "grow_up": false,
+            "hunger": 0
+        },
+        {
+            "animal": "None",
+            "growth_time": 0,
+            "neatness": 10,
+            "manger": [],
+            "health": 100,
+            "sick": false,
+            "sick_prob": 0.1,
+            "grow_up": false,
+            "hunger": 0
+        },
+        {
+            "animal": "None",
+            "growth_time": 0,
+            "neatness": 10,
+            "manger": [],
+            "health": 100,
+            "sick": false,
+            "sick_prob": 0.1,
+            "grow_up": false,
+            "hunger": 0
+        },
+        {
+            "animal": "None",
+            "growth_time": 0,
+            "neatness": 10,
+            "manger": [],
+            "health": 100,
+            "sick": false,
+            "sick_prob": 0.1,
+            "grow_up": false,
+            "hunger": 0
+        }
+    ]
+}
