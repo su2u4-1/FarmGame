@@ -12,9 +12,9 @@ class Display_info:
             title (list[object] | str): The title to display.
         """
         if isinstance(title, str):
-            title = tuple(title.split("|"))
+            title = tuple(i.strip() for i in title.split("|"))
         else:
-            title = tuple(str(t) for t in title)
+            title = tuple(str(t).strip() for t in title)
         self.show = [title]
         self.size = len(title)
         self.length: list[int] = [wcswidth(t) for t in title]
@@ -28,9 +28,9 @@ class Display_info:
             ValueError: If the length of the item exceeds the title length.
         """
         if isinstance(item, str):
-            item = tuple(item.split("|"))
+            item = tuple(i.strip() for i in item.split("|"))
         else:
-            item = tuple(str(i) for i in item)
+            item = tuple(str(i).strip() for i in item)
         if len(item) > self.size:
             raise ValueError("Item length exceeds title length.")
         elif len(item) < self.size:
@@ -64,6 +64,8 @@ def display_option_and_get_input(
     Returns:
         int: The index of the chosen option.
     """
+    if isinstance(options, str):
+        options = options.split("|")
     show = "".join(f"[{i + 1}.{option.strip()}]" for i, option in enumerate(options)) + ": "
 
     while True:
@@ -178,7 +180,7 @@ def display_request_and_get_range_input(
             return 1
         for j in range(s, e + 1):
             if out_range_condition(j):
-                print(out_range_err_msg)
+                print(out_range_err_msg.format(j))
                 if not discard_err_item[0]:
                     return 2
                 continue
@@ -215,7 +217,7 @@ def display_request_and_get_range_input(
                         break
                     continue
                 if out_range_condition(i):
-                    print(out_range_err_msg)
+                    print(out_range_err_msg.format(i))
                     if not discard_err_item[0]:
                         t = 2
                         break

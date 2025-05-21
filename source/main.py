@@ -72,7 +72,7 @@ def init(root_path: str, language: str) -> Data:
 def load_player(root_path: str, text: Text) -> Player:
     print(text["start_4"])
     while True:
-        match display_option_and_get_input(text["start_5"].split("|"), lambda x: 0 <= x < 3, text["input_error"], text["input_not_int"]):
+        match display_option_and_get_input(text["start_5"], lambda x: 0 <= x < 3, text["input_error"], text["input_not_int"]):
             case 0:
                 f = True
                 while True:
@@ -104,12 +104,88 @@ def load_player(root_path: str, text: Text) -> Player:
                 exit()
 
 
-def manage_farmland(player: Player, data: Data) -> None:
-    pass
+def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> None:
+    while True:
+        match display_option_and_get_input(data.text["farm_op_0"], lambda x: 0 <= x < 7, data.text["input_error"], data.text["input_not_int"]):
+            case 0:
+                pass
+            case 1:
+                pass
+            case 2:
+                pass
+            case 3:
+                pass
+            case 4:
+                pass
+            case 5:
+                pass
+            case 6:
+                return
 
 
-def manage_corral(player: Player, data: Data) -> None:
-    pass
+def farmland(player: Player, data: Data) -> None:
+    while True:
+        match display_option_and_get_input(data.text["farmland_0"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"]):
+            case 0:
+                choices = display_request_and_get_range_input(
+                    data.text["farmland_1"], lambda x: 0 <= x < player.farmland_size, data.text["farmland_2"], data.text["input_not_int"], data.text["format_error"]
+                )
+                if choices == (-1,):
+                    continue
+                elif choices == (-2,):
+                    choices = tuple(range(player.farmland_size))
+                manage_farmland(player, data, choices)
+            case 1:
+                info = Display_info(data.text["farmland_info"])
+                for i in range(player.farmland_size):
+                    j = player.farmland[i]
+                    info.add((i, j.crop, j.growth_time, j.soil_fertility, j.bug_appear_prob, j.bug_number, j.weed_appear_prob, j.weed_appear, j.ripe, j.organic))
+                print(data.text["farmland_3"].format(player.farmland_size))
+                info.display()
+            case 2:
+                return
+
+
+def manage_corral(player: Player, data: Data, choices: tuple[int, ...]) -> None:
+    while True:
+        match display_option_and_get_input(data.text["corral_op_0"], lambda x: 0 <= x < 7, data.text["input_error"], data.text["input_not_int"]):
+            case 0:
+                pass
+            case 1:
+                pass
+            case 2:
+                pass
+            case 3:
+                pass
+            case 4:
+                pass
+            case 5:
+                pass
+            case 6:
+                return
+
+
+def corral(player: Player, data: Data) -> None:
+    while True:
+        match display_option_and_get_input(data.text["corral_0"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"]):
+            case 0:
+                choices = display_request_and_get_range_input(
+                    data.text["corral_1"], lambda x: 0 <= x < player.corral_size, data.text["corral_2"], data.text["input_not_int"], data.text["format_error"]
+                )
+                if choices == (-1,):
+                    continue
+                elif choices == (-2,):
+                    choices = tuple(range(player.corral_size))
+                manage_corral(player, data, choices)
+            case 1:
+                info = Display_info(data.text["corral_info"])
+                for i in range(player.corral_size):
+                    j = player.corral[i]
+                    info.add((i, j.animal, j.growth_time, j.hunger, j.neatness, j.health, j.sick_prob, j.sick, j.grow_up))
+                print(data.text["corral_3"].format(player.corral_size))
+                info.display()
+            case 2:
+                return
 
 
 def shop(player: Player, data: Data) -> None:
@@ -122,7 +198,7 @@ def next_day(player: Player, data: Data) -> None:
 
 def setting(player: Player, data: Data) -> None:
     while True:
-        match display_option_and_get_input(data.text["other_0"].split("|"), lambda x: 0 <= x < 4, data.text["input_error"], data.text["input_not_int"]):
+        match display_option_and_get_input(data.text["other_0"], lambda x: 0 <= x < 4, data.text["input_error"], data.text["input_not_int"]):
             case 0:
                 print(data.text["other_1"])
                 for i in data.language:
@@ -160,11 +236,11 @@ def setting(player: Player, data: Data) -> None:
 def main(player: Player, data: Data) -> None:
     print(data.text["main_0"])
     while True:
-        match display_option_and_get_input(data.text["main_1"].split("|"), lambda x: 0 <= x < 5, data.text["input_error"], data.text["input_not_int"]):
+        match display_option_and_get_input(data.text["main_1"], lambda x: 0 <= x < 5, data.text["input_error"], data.text["input_not_int"]):
             case 0:
-                manage_farmland(player, data)
+                farmland(player, data)
             case 1:
-                manage_corral(player, data)
+                corral(player, data)
             case 2:
                 shop(player, data)
             case 3:
