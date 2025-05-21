@@ -67,7 +67,7 @@ class Player:
         self.bag = Bag()
         self.farmland: list[Farmland] = []
         self.corral: list[Corral] = []
-        self.language = "en"
+        self.language = "zh-tw"
         self.farmland_size = 6
         self.corral_size = 6
         for _ in range(self.farmland_size):
@@ -128,29 +128,38 @@ class Player:
         return 0
 
     def save(self) -> str:
-        s = "{"
-        s += f'"name": "{self.name}","day": {self.day},'
-        s += '"bag": {"items": {'
+        t: list[str] = []
+        s = "{" + f'"name": "{self.name}","day": {self.day},' + '"bag": {"items": {'
         for k, v in self.bag.items.items():
-            s += f'"{k}": {v},'
+            t.append(f'"{k}": {v},')
+        s += ",".join(t)
+        t = []
         s += '},"seeds": {'
         for k, v in self.bag.seeds.items():
-            s += f'"{k}": {v},'
+            t.append(f'"{k}": {v},')
+        s += ",".join(t)
+        t = []
         s += '},"crops": {'
         for k, v in self.bag.crops.items():
-            s += f'"{k}": {v},'
-        s += "},"
-        s += f'"money": {self.bag.money},'
-        s += "},"
-        s += f'"language": "{self.language}","farmland_size": {self.farmland_size},"farmland": ['
+            t.append(f'"{k}": {v}')
+        s += ",".join(t)
+        t = []
+        s += "}," + f'"money": {self.bag.money}' + "}," + f'"language": "{self.language}","farmland_size": {self.farmland_size},"farmland": ['
         for i in range(self.farmland_size):
-            s += "{"
-            s += f'"crop": "{self.farmland[i].crop}","growth_time": {self.farmland[i].growth_time},"soil_fertility": {self.farmland[i].soil_fertility},"bug_appear_prob": {self.farmland[i].bug_appear_prob},"bug_number": {self.farmland[i].bug_number},"weed_appear_prob": {self.farmland[i].weed_appear_prob},"weed_appear": {self.farmland[i].weed_appear},"ripe": {self.farmland[i].ripe},"organic": {self.farmland[i].organic}'
-            s += "},"
-        s += f'],corral_size": {self.corral_size},"corral": ['
+            t.append(
+                "{"
+                + f'"crop": "{self.farmland[i].crop}","growth_time": {self.farmland[i].growth_time},"soil_fertility": {self.farmland[i].soil_fertility},"bug_appear_prob": {self.farmland[i].bug_appear_prob},"bug_number": {self.farmland[i].bug_number},"weed_appear_prob": {self.farmland[i].weed_appear_prob},"weed_appear": {"true" if self.farmland[i].weed_appear else "false"},"ripe": {"true" if self.farmland[i].ripe else "false"},"organic": {"true" if self.farmland[i].organic else " false"}'
+                + "}"
+            )
+        s += ",".join(t)
+        t = []
+        s += f'],"corral_size": {self.corral_size},"corral": ['
         for i in range(self.corral_size):
-            s += "{"
-            s += f'"animal": "{self.corral[i].animal}","growth_time": {self.corral[i].growth_time},"neatness": {self.corral[i].neatness},"manger": {self.corral[i].manger},"health": {self.corral[i].health},"sick": {self.corral[i].sick},"sick_prob": {self.corral[i].sick_prob},"grow_up": {self.corral[i].grow_up},"hunger": {self.corral[i].hunger}'
-            s += "},"
-        s += "],}"
+            t.append(
+                "{"
+                + f'"animal": "{self.corral[i].animal}","growth_time": {self.corral[i].growth_time},"neatness": {self.corral[i].neatness},"manger": {self.corral[i].manger},"health": {self.corral[i].health},"sick": {"true" if self.corral[i].sick else "false"},"sick_prob": {self.corral[i].sick_prob},"grow_up": {"true" if self.corral[i].grow_up else "false"},"hunger": {self.corral[i].hunger}'
+                + "}"
+            )
+        s += ",".join(t)
+        s += "]}"
         return s

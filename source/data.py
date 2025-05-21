@@ -56,5 +56,10 @@ class Data:
         self.language = tuple(language)
 
     def update_text(self, path: str) -> None:
-        with open(path, "r", encoding="utf-8") as f:
-            self.text = Text(load(f))
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                self.text = Text(load(f))
+        except FileNotFoundError:
+            print(self.text["text_file_not_found"].format(path))
+        except Exception as e:
+            print(self.text["text_file_error"].format(path, e))

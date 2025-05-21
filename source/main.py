@@ -7,21 +7,66 @@ from ui import *
 
 
 def init(root_path: str, language: str) -> Data:
-    with open(f"{root_path}/language/{language}.json", "r", encoding="utf-8") as f:
-        text = Text(load(f))
-    with open(f"{root_path}/data/items.json", "r", encoding="utf-8") as f:
-        items = {k: Item(k) for k, _ in load(f).items()}
-    with open(f"{root_path}/data/seeds.json", "r", encoding="utf-8") as f:
-        seeds = {k: Seed(k) for k, _ in load(f).items()}
-    with open(f"{root_path}/data/crops.json", "r", encoding="utf-8") as f:
-        crops = {k: Crop(v["growth_time"], v["seed_price"], v["sell_price"], v["soil_needed"], v["pest_resistance"]) for k, v in load(f).items()}
-    with open(f"{root_path}/data/animals.json", "r", encoding="utf-8") as f:
-        animals = {
-            k: Animal(v["baby_price"], v["growth_time"], v["adult_sell_price"], tuple(v["food"]), v["food_needed_per_day"], v["required_neatness"]) for k, v in load(f).items()
-        }
-    with open(f"{root_path}/data/language.json", "r", encoding="utf-8") as f:
-        language = load(f)
-    return Data(text, items, seeds, crops, animals, language)
+    try:
+        with open(f"{root_path}/language/{language}.json", "r", encoding="utf-8") as f:
+            text = Text(load(f))
+    except Exception as e:
+        print("Error: Unable to load language file. error: ", e)
+        exit(1)
+
+    try:
+        with open(f"{root_path}/data/items.json", "r", encoding="utf-8") as f:
+            items = {k: Item(k) for k, _ in load(f).items()}
+    except FileNotFoundError | IOError as e:
+        print(text["file_error"].format(f"{root_path}/data/items.json", e))
+        exit(1)
+    except Exception as e:
+        print(text["load_data_error"].format("items", e))
+        exit(1)
+
+    try:
+        with open(f"{root_path}/data/seeds.json", "r", encoding="utf-8") as f:
+            seeds = {k: Seed(k) for k, _ in load(f).items()}
+    except FileNotFoundError | IOError as e:
+        print(text["file_error"].format(f"{root_path}/data/seeds.json", e))
+        exit(1)
+    except Exception as e:
+        print(text["load_data_error"].format("seeds", e))
+        exit(1)
+
+    try:
+        with open(f"{root_path}/data/crops.json", "r", encoding="utf-8") as f:
+            crops = {k: Crop(v["growth_time"], v["seed_price"], v["sell_price"], v["soil_needed"], v["pest_resistance"]) for k, v in load(f).items()}
+    except FileNotFoundError | IOError as e:
+        print(text["file_error"].format(f"{root_path}/data/crops.json", e))
+        exit(1)
+    except Exception as e:
+        print(text["load_data_error"].format("crops", e))
+        exit(1)
+
+    try:
+        with open(f"{root_path}/data/animals.json", "r", encoding="utf-8") as f:
+            animals = {
+                k: Animal(v["baby_price"], v["growth_time"], v["adult_sell_price"], tuple(v["food"]), v["food_needed_per_day"], v["required_neatness"]) for k, v in load(f).items()
+            }
+    except FileNotFoundError | IOError as e:
+        print(text["file_error"].format(f"{root_path}/data/animals.json", e))
+        exit(1)
+    except Exception as e:
+        print(text["load_data_error"].format("animals", e))
+        exit(1)
+
+    try:
+        with open(f"{root_path}/data/language.json", "r", encoding="utf-8") as f:
+            language_list = load(f)
+    except FileNotFoundError | IOError as e:
+        print(text["file_error"].format(f"{root_path}/data/language.json", e))
+        exit(1)
+    except Exception as e:
+        print(text["load_data_error"].format("language_list", e))
+        exit(1)
+
+    return Data(text, items, seeds, crops, animals, language_list)
 
 
 def load_player(root_path: str, text: Text) -> Player:
@@ -77,7 +122,7 @@ def next_day(player: Player, data: Data) -> None:
 
 def setting(player: Player, data: Data) -> None:
     while True:
-        match display_option_and_get_input(data.text["other_0"], lambda x: 0 <= x < 4, data.text["input_error"], data.text["input_not_int"]):
+        match display_option_and_get_input(data.text["other_0"].split("|"), lambda x: 0 <= x < 4, data.text["input_error"], data.text["input_not_int"]):
             case 0:
                 print(data.text["other_1"])
                 for i in data.language:
@@ -115,7 +160,7 @@ def setting(player: Player, data: Data) -> None:
 def main(player: Player, data: Data) -> None:
     print(data.text["main_0"])
     while True:
-        match display_option_and_get_input(data.text["main_1"], lambda x: 0 <= x < 5, data.text["input_error"], data.text["input_not_int"]):
+        match display_option_and_get_input(data.text["main_1"].split("|"), lambda x: 0 <= x < 5, data.text["input_error"], data.text["input_not_int"]):
             case 0:
                 manage_farmland(player, data)
             case 1:
@@ -132,4 +177,5 @@ if __name__ == "__main__":
     root_path = abspath(dirname(__file__) + "/..").replace("\\", "/")
     DATA = init(root_path, "zh-tw")
     player = load_player(root_path, DATA.text)
+    DATA.update_text(f"{root_path}/language/{player.language}.json")
     main(player, DATA)
