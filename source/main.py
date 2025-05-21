@@ -1,5 +1,6 @@
 from json import load
 from os.path import dirname, abspath, isfile
+from random import randint as ri
 
 from data import *
 from player import *
@@ -108,17 +109,111 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
     while True:
         match display_option_and_get_input(data.text["farm_op_0"], lambda x: 0 <= x < 7, data.text["input_error"], data.text["input_not_int"]):
             case 0:
-                pass
+                m: dict[int, str] = {}
+                info = Display_info(data.text["farm_op_12"])
+                for i, (k, v) in enumerate(player.bag.seeds.items()):
+                    info.add((i + 1, data.text[k], v))
+                    m[i] = k
+                print(data.text["farm_op_1"])
+                info.display()
+                choice_seed = display_request_and_get_int_input(data.text["farm_op_2"], lambda x: 0 < x <= len(m), data.text["farm_op_3"], data.text["input_not_int"]) - 1
+                if choice_seed == -1:
+                    continue
+                if player.bag.seeds[m[choice_seed]] < len(choices):
+                    print(data.text["farm_op_7"].format(data.text[m[choice_seed]]))
+                    continue
+                player.bag.seeds[m[choice_seed]] -= len(choices)
+                for i in choices:
+                    player.farmland[i].crop = m[choice_seed]
             case 1:
-                pass
+                print(data.text["farm_op_5"].format(data.text["organic_fertilizer"], player.bag.items.get("organic_fertilizer")))
+                print(data.text["farm_op_5"].format(data.text["chemical_fertilizer"], player.bag.items.get("chemical_fertilizer")))
+                choice_fertilizer = display_option_and_get_input(data.text["farm_op_6"], lambda x: 0 <= x < 3, data.text["farm_op_3"], data.text["input_not_int"])
+                if choice_fertilizer == 2:
+                    continue
+                if choice_fertilizer == 0:
+                    choice_fertilizer = "organic_fertilizer"
+                else:
+                    choice_fertilizer = "chemical_fertilizer"
+                if player.bag.items[choice_fertilizer] < len(choices):
+                    print(data.text["farm_op_7"].format(data.text[choice_fertilizer]))
+                    continue
+                player.bag.items[choice_fertilizer] -= len(choices)
+                for i in choices:
+                    player.farmland[i].soil_fertility += 1
+                    if choice_fertilizer == "chemical_fertilizer":
+                        player.farmland[i].organic = False
+                    else:
+                        player.farmland[i].bug_appear_prob += 0.05
             case 2:
-                pass
+                if not display_request_and_get_bool_input(data.text["farm_op_8"], False):
+                    continue
+                crops: dict[str, int] = {}
+                for i in choices:
+                    i = player.farmland[i]
+                    i.bug_appear_prob /= ri(150, 250) // 100
+                    i.bug_number = 0
+                    i.weed_appear_prob /= ri(150, 250) // 100
+                    i.weed_appear = False
+                    i.growth_time = 0
+                    if i.ripe:
+                        crop_name = i.crop.removesuffix("_seed")
+                        crops[crop_name] = crops.get(crop_name, 0) + 1
+                    else:
+                        i.soil_fertility *= ri(100, 150) // 100
+                    i.ripe = False
+                    i.crop = ""
+                print(data.text["farm_op_9"])
+                for k, v in crops.items():
+                    print("    " + data.text[k] + f"*{v}" if v > 1 else "")
+                player.bag.crops.update(crops)
             case 3:
-                pass
+                print(data.text["farm_op_5"].format(data.text["herbicide"], player.bag.items.get("herbicide", 0)))
+                choice_herbicide = display_option_and_get_input(data.text["farm_op_11"], lambda x: 0 < x <= 3, data.text["input_error"], data.text["input_not_int"])
+                if choice_herbicide == 2:
+                    continue
+                if choice_herbicide == 1 and player.bag.items["herbicide"] < len(choices):
+                    print(data.text["farm_op_7"].format(data.text["herbicide"]))
+                    continue
+                if choice_herbicide == 1:
+                    player.bag.items["herbicide"] -= len(choices)
+                    for i in choices:
+                        i = player.farmland[i]
+                        i.weed_appear_prob /= ri(200, 300) // 100
+                        i.weed_appear = False
+                        i.organic = False
+                else:
+                    for i in choices:
+                        i = player.farmland[i]
+                        i.weed_appear_prob /= ri(150, 250) // 100
+                        i.weed_appear = False
             case 4:
-                pass
+                print(data.text["farm_op_5"].format(data.text["insecticide"], player.bag.items.get("insecticide", 0)))
+                choice_insecticide = display_option_and_get_input(data.text["farm_op_11"], lambda x: 0 < x <= 3, data.text["input_error"], data.text["input_not_int"])
+                if choice_insecticide == 2:
+                    continue
+                if choice_insecticide == 1 and player.bag.items["insecticide"] < len(choices):
+                    print(data.text["farm_op_7"].format(data.text["insecticide"]))
+                    continue
+                if choice_insecticide == 1:
+                    player.bag.items["insecticide"] -= len(choices)
+                    for i in choices:
+                        i = player.farmland[i]
+                        i.bug_appear_prob /= ri(200, 300) // 100
+                        i.bug_number = ri(0, i.bug_number // 10)
+                        i.organic = False
+                else:
+                    for i in choices:
+                        i = player.farmland[i]
+                        i.bug_appear_prob /= ri(150, 250) // 100
+                        i.bug_number = ri(0, i.bug_number // 5)
             case 5:
-                pass
+                info = Display_info(data.text["farmland_info"])
+                for i in choices:
+                    j = player.farmland[i]
+                    info.add((i, j.crop, j.growth_time, j.soil_fertility, j.bug_appear_prob, j.bug_number, j.weed_appear_prob, j.weed_appear, j.ripe, j.organic))
+                print(data.text["farmland_3"].format(len(choices)))
+                info.display()
             case 6:
                 return
 
