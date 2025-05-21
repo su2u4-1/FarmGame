@@ -11,7 +11,7 @@
     "farmland_size": 6,
     "farmland": [
         {
-            "crop": "None",
+            "crop": "",
             "growth_time": 0,
             "soil_fertility": 10,
             "bug_appear_prob": 0.1,
@@ -22,7 +22,7 @@
             "organic": true
         },
         {
-            "crop": "None",
+            "crop": "",
             "growth_time": 0,
             "soil_fertility": 10,
             "bug_appear_prob": 0.1,
@@ -33,7 +33,7 @@
             "organic": true
         },
         {
-            "crop": "None",
+            "crop": "",
             "growth_time": 0,
             "soil_fertility": 10,
             "bug_appear_prob": 0.1,
@@ -44,7 +44,7 @@
             "organic": true
         },
         {
-            "crop": "None",
+            "crop": "",
             "growth_time": 0,
             "soil_fertility": 10,
             "bug_appear_prob": 0.1,
@@ -55,7 +55,7 @@
             "organic": true
         },
         {
-            "crop": "None",
+            "crop": "",
             "growth_time": 0,
             "soil_fertility": 10,
             "bug_appear_prob": 0.1,
@@ -66,7 +66,7 @@
             "organic": true
         },
         {
-            "crop": "None",
+            "crop": "",
             "growth_time": 0,
             "soil_fertility": 10,
             "bug_appear_prob": 0.1,
@@ -80,7 +80,7 @@
     "corral_size": 6,
     "corral": [
         {
-            "animal": "None",
+            "animal": "",
             "growth_time": 0,
             "neatness": 10,
             "manger": [],
@@ -91,7 +91,7 @@
             "hunger": 0
         },
         {
-            "animal": "None",
+            "animal": "",
             "growth_time": 0,
             "neatness": 10,
             "manger": [],
@@ -102,7 +102,7 @@
             "hunger": 0
         },
         {
-            "animal": "None",
+            "animal": "",
             "growth_time": 0,
             "neatness": 10,
             "manger": [],
@@ -113,7 +113,7 @@
             "hunger": 0
         },
         {
-            "animal": "None",
+            "animal": "",
             "growth_time": 0,
             "neatness": 10,
             "manger": [],
@@ -124,7 +124,7 @@
             "hunger": 0
         },
         {
-            "animal": "None",
+            "animal": "",
             "growth_time": 0,
             "neatness": 10,
             "manger": [],
@@ -135,7 +135,7 @@
             "hunger": 0
         },
         {
-            "animal": "None",
+            "animal": "",
             "growth_time": 0,
             "neatness": 10,
             "manger": [],

@@ -1,18 +1,16 @@
 from json import load
-from typing import Optional, Sequence
-
-from data import Crop, Animal
+from typing import Sequence
 
 
 class Farmland:
     def __init__(
         self,
-        crop: Optional[Crop] = None,
+        crop: str = "",
         growth_time: int = 0,
         soil_fertility: int = 10,
-        bug_appear_prob: float = 0.1,
+        bug_appear_prob: float = 0.05,
         bug_number: int = 0,
-        weed_appear_prob: float = 0.1,
+        weed_appear_prob: float = 0.05,
         weed_appear: bool = False,
         ripe: bool = False,
         organic: bool = True,
@@ -31,7 +29,7 @@ class Farmland:
 class Corral:
     def __init__(
         self,
-        animal: Optional[Animal] = None,
+        animal: str = "",
         growth_time: int = 0,
         neatness: int = 10,
         manger: Sequence[str] = (),
