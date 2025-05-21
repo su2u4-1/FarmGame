@@ -103,6 +103,8 @@ def display_request_and_get_int_input(
     """
     if not request.endswith(":") and not request.endswith(": "):
         request += ": "
+    elif request.endswith(":"):
+        request += " "
     while True:
         choice = input(request)
         if stop_condition(choice):
@@ -227,7 +229,7 @@ def display_request_and_get_range_input(
                 break
         if t == 2:
             continue
-        return tuple(result)
+        return tuple(set(result))
 
 
 def display_info(title: Union[Sequence[object], str], *items: Sequence[object]) -> None:
