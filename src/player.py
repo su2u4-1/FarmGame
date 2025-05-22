@@ -1,5 +1,5 @@
 from json import load
-from typing import Sequence
+from typing import Any, Callable, Sequence, TypeVar
 
 
 class Farmland:
@@ -50,11 +50,30 @@ class Corral:
         self.hunger = hunger
 
 
+K = TypeVar("K")
+V = TypeVar("V")
+
+
+class DefaultDict(dict[K, V]):
+    def __init__(self, default_factory: Callable[[K], V], *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, *kwargs)
+        self.default_factory = default_factory
+
+    def __missing__(self, key: K) -> V:
+        return self.default_factory(key)
+
+    def __getitem__(self, key: K) -> V:
+        if key in self:
+            return super().__getitem__(key)
+        return self.__missing__(key)
+
+
 class Bag:
     def __init__(self) -> None:
-        self.items: dict[str, int] = {}
-        self.seeds: dict[str, int] = {}
-        self.crops: dict[str, int] = {}
+        self.items: DefaultDict[str, int] = DefaultDict(lambda _: 0)
+        self.seeds: DefaultDict[str, int] = DefaultDict(lambda _: 0)
+        self.crops: DefaultDict[str, int] = DefaultDict(lambda _: 0)
+        self.animals: DefaultDict[str, int] = DefaultDict(lambda _: 0)
         self.money = 100
 
 
@@ -83,9 +102,10 @@ class Player:
         try:
             self.name = data["name"]
             self.day = data["day"]
-            self.bag.items = data["bag"]["items"]
-            self.bag.seeds = data["bag"]["seeds"]
-            self.bag.crops = data["bag"]["crops"]
+            self.bag.items = DefaultDict(lambda _: 0, data["bag"]["items"])
+            self.bag.seeds = DefaultDict(lambda _: 0, data["bag"]["seeds"])
+            self.bag.crops = DefaultDict(lambda _: 0, data["bag"]["crops"])
+            self.bag.animals = DefaultDict(lambda _: 0, data["bag"]["animals"])
             self.bag.money = data["bag"]["money"]
             self.language = data["language"]
             self.farmland = []
@@ -139,6 +159,11 @@ class Player:
         t = []
         s += '},"crops": {'
         for k, v in self.bag.crops.items():
+            t.append(f'"{k}": {v}')
+        s += ",".join(t)
+        t = []
+        s += '},"animals": {'
+        for k, v in self.bag.animals.items():
             t.append(f'"{k}": {v}')
         s += ",".join(t)
         t = []

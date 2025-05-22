@@ -4,19 +4,20 @@ from typing import Sequence
 
 
 class Item:
-    def __init__(self, ID: str) -> None:
+    def __init__(self, ID: str, sell_price: int) -> None:
         self.ID = ID
+        self.sell_price = sell_price
 
 
 class Seed:
-    def __init__(self, ID: str) -> None:
+    def __init__(self, ID: str, sell_price: int) -> None:
         self.ID = ID
+        self.sell_price = sell_price
 
 
 class Crop:
-    def __init__(self, growth_time: int, seed_price: int, sell_price: int, soil_needed: int, pest_resistance: int) -> None:
+    def __init__(self, growth_time: int, sell_price: int, soil_needed: int, pest_resistance: int) -> None:
         self.growth_time = growth_time
-        self.seed_price = seed_price
         self.sell_price = sell_price
         self.soil_needed = soil_needed
         self.pest_resistance = pest_resistance
@@ -24,11 +25,11 @@ class Crop:
 
 class Animal:
     def __init__(
-        self, baby_price: int, growth_time: int, adult_sell_price: int, food: tuple[str], food_needed_per_day: int, required_neatness: int
+        self, baby_price: int, growth_time: int, sell_price: int, food: tuple[str], food_needed_per_day: int, required_neatness: int
     ) -> None:
         self.baby_price = baby_price
         self.growth_time = growth_time
-        self.adult_sell_price = adult_sell_price
+        self.sell_price = sell_price
         self.food = food
         self.food_needed_per_day = food_needed_per_day
         self.required_neatness = required_neatness
