@@ -20,10 +20,10 @@ This is a simple text-based farm game where players can plant crops or raise ani
 ├── language/
 │   ├── en.json5        // text data in English
 │   └── zh-tw.json5     // text data in Chinese(Taiwan)
-└── source/
-    ├── data.py
+└── src/
+    ├── data.py         // data class
     ├── main.py         // program entry point
-    ├── player.py
-    ├── tools.py
+    ├── player.py       // player class
+    ├── tools.py        // just an empty file now
     └── ui.py           // UI functions
 ```
