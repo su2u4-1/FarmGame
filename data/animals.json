@@ -8,7 +8,8 @@
             "corn"
         ],
         "food_needed_per_day": 1,
-        "required_neatness": 3
+        "required_neatness": 3,
+        "sell_price": -1
     },
     "ox": {
         "baby_price": 50,
@@ -19,7 +20,8 @@
             "tomato"
         ],
         "food_needed_per_day": 2,
-        "required_neatness": 7
+        "required_neatness": 7,
+        "sell_price": -1
     },
     "sheep": {
         "baby_price": 30,
@@ -30,7 +32,8 @@
             "corn"
         ],
         "food_needed_per_day": 2,
-        "required_neatness": 5
+        "required_neatness": 5,
+        "sell_price": -1
     },
     "pig": {
         "baby_price": 40,
@@ -41,7 +44,8 @@
             "potato"
         ],
         "food_needed_per_day": 3,
-        "required_neatness": 2
+        "required_neatness": 2,
+        "sell_price": -1
     },
     "duck": {
         "baby_price": 25,
@@ -52,7 +56,8 @@
             "tomato"
         ],
         "food_needed_per_day": 1,
-        "required_neatness": 4
+        "required_neatness": 4,
+        "sell_price": -1
     },
     "rabbit": {
         "baby_price": 15,
@@ -63,7 +68,8 @@
             "tomato"
         ],
         "food_needed_per_day": 1,
-        "required_neatness": 6
+        "required_neatness": 6,
+        "sell_price": -1
     },
     "horse": {
         "baby_price": 70,
@@ -74,7 +80,8 @@
             "potato"
         ],
         "food_needed_per_day": 3,
-        "required_neatness": 8
+        "required_neatness": 8,
+        "sell_price": -1
     },
     "goat": {
         "baby_price": 35,
@@ -85,7 +92,8 @@
             "onion"
         ],
         "food_needed_per_day": 2,
-        "required_neatness": 5
+        "required_neatness": 5,
+        "sell_price": -1
     },
     "turkey": {
         "baby_price": 30,
@@ -96,7 +104,8 @@
             "corn"
         ],
         "food_needed_per_day": 1,
-        "required_neatness": 4
+        "required_neatness": 4,
+        "sell_price": -1
     },
     "goose": {
         "baby_price": 25,
@@ -107,6 +116,7 @@
             "tomato"
         ],
         "food_needed_per_day": 1,
-        "required_neatness": 5
+        "required_neatness": 5,
+        "sell_price": -1
     }
 }
