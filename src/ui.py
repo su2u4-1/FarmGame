@@ -50,7 +50,7 @@ class Display_info:
 
 def display_option_and_get_input(
     options: Sequence[str],
-    out_range_condition: Callable[[int], bool],
+    within_range_condition: Callable[[int], bool],
     out_range_err_msg: str = "Please enter a valid number.",
     input_not_int_err_msg: str = "Please enter a integer.",
 ) -> int:
@@ -58,7 +58,7 @@ def display_option_and_get_input(
     Displays a list of options and returns the user's choice.
     Args:
         options (Sequence[str]): The list of options to display.
-        out_range_condition (Callable[[int], bool]): A function that checks if the input is out of range.
+        within_range_condition (Callable[[int], bool]): A function that checks if the input is within range.
         out_range_err_msg (str): The error message to display for out of range input.
         input_not_int_err_msg (str): The error message to display for non-integer input.
     Returns:
@@ -71,7 +71,7 @@ def display_option_and_get_input(
     while True:
         try:
             choice = int(input(show))
-            if out_range_condition(choice - 1):
+            if within_range_condition(choice - 1):
                 return choice - 1
             else:
                 print(out_range_err_msg)
@@ -81,7 +81,7 @@ def display_option_and_get_input(
 
 def display_request_and_get_int_input(
     request: str,
-    out_range_condition: Callable[[int], bool],
+    within_range_condition: Callable[[int], bool],
     out_range_err_msg: str = "Please enter a valid number.",
     input_not_int_err_msg: str = "Please enter a integer.",
     stop_condition: Callable[[str], bool] = lambda x: x == "-1",
@@ -92,7 +92,7 @@ def display_request_and_get_int_input(
 
     Args:
         request (str): The request message to display.
-        out_range_condition (Callable[[int], bool]): A function that checks if the input is out of range.
+        within_range_condition (Callable[[int], bool]): A function that checks if the input is within range.
         out_range_err_msg (str): The error message to display for out of range input.
         input_not_int_err_msg (str): The error message to display for non-integer input.
         stop_condition (Callable[[str], bool]): A function that checks if the input is a stop condition.
@@ -111,17 +111,17 @@ def display_request_and_get_int_input(
             return stop_flag
         try:
             choice = int(choice)
-            if out_range_condition(choice):
-                print(out_range_err_msg)
+            if within_range_condition(choice - 1):
+                return choice - 1
             else:
-                return choice
+                print(out_range_err_msg)
         except ValueError:
             print(input_not_int_err_msg)
 
 
 def display_request_and_get_range_input(
     request: str,
-    out_range_condition: Callable[[int], bool],
+    within_range_condition: Callable[[int], bool],
     out_range_err_msg: str = "Please enter a valid number.",
     input_not_int_err_msg: str = "Please enter a integer.",
     format_err_msg: str = "Please enter a valid format.",
@@ -136,7 +136,7 @@ def display_request_and_get_range_input(
 
     Args:
         request (str): The request message to display to the user.
-        out_range_condition (Callable[[int], bool]): A function that checks if an input number is out of valid range.
+        within_range_condition (Callable[[int], bool]): A function that checks if an input number is within valid range.
         out_range_err_msg (str): The error message to display when an input is out of valid range.
         input_not_int_err_msg (str): The error message to display when the input is not an integer.
         format_err_msg (str): The error message to display when the input format is invalid.
@@ -181,12 +181,12 @@ def display_request_and_get_range_input(
                 return 2
             return 1
         for j in range(s, e + 1):
-            if out_range_condition(j):
+            if not within_range_condition(j - 1):
                 print(out_range_err_msg.format(j))
                 if not discard_err_item[0]:
                     return 2
                 continue
-            result.append(j)
+            result.append(j - 1)
         return 0
 
     if not request.endswith(":") and not request.endswith(": "):
@@ -218,13 +218,13 @@ def display_request_and_get_range_input(
                         t = 2
                         break
                     continue
-                if out_range_condition(i):
+                if not within_range_condition(i - 1):
                     print(out_range_err_msg.format(i))
                     if not discard_err_item[0]:
                         t = 2
                         break
                     continue
-                result.append(i)
+                result.append(i - 1)
             if t == 2:
                 break
         if t == 2:

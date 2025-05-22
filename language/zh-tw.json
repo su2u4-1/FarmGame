@@ -75,6 +75,7 @@
     "load_data_error": "無法載入 {0} 資料: {1}",
     "input_not_int": "輸入非數字",
     "format_error": "格式錯誤",
+    "empty": "空",
     "start_0": "存檔名稱(輸入-1取消): ",
     "start_1": "檔案{0}.json不存在",
     "start_2": "玩家{0}載入成功",
