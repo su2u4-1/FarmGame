@@ -1,6 +1,7 @@
 from json import load
 from os.path import dirname, abspath, isfile
 from random import randint as ri
+from typing import Literal
 
 from data import *
 from player import *
@@ -18,7 +19,7 @@ def init(root_path: str, language: str) -> Data:
 
     try:
         with open(f"{root_path}/data/items.json", "r", encoding="utf-8") as f:
-            items = {k: Item(k) for k, _ in load(f).items()}
+            items = {k: Item(k, v["sell_price"]) for k, v in load(f).items()}
     except FileNotFoundError | IOError as e:
         print(text["file_error"].format(f"{root_path}/data/items.json", e))
         exit(1)
@@ -28,7 +29,7 @@ def init(root_path: str, language: str) -> Data:
 
     try:
         with open(f"{root_path}/data/seeds.json", "r", encoding="utf-8") as f:
-            seeds = {k: Seed(k) for k, _ in load(f).items()}
+            seeds = {k: Seed(k, v["sell_price"]) for k, v in load(f).items()}
     except FileNotFoundError | IOError as e:
         print(text["file_error"].format(f"{root_path}/data/seeds.json", e))
         exit(1)
@@ -38,10 +39,7 @@ def init(root_path: str, language: str) -> Data:
 
     try:
         with open(f"{root_path}/data/crops.json", "r", encoding="utf-8") as f:
-            crops = {
-                k: Crop(v["growth_time"], v["seed_price"], v["sell_price"], v["soil_needed"], v["pest_resistance"])
-                for k, v in load(f).items()
-            }
+            crops = {k: Crop(v["growth_time"], v["sell_price"], v["soil_needed"], v["pest_resistance"]) for k, v in load(f).items()}
     except FileNotFoundError | IOError as e:
         print(text["file_error"].format(f"{root_path}/data/crops.json", e))
         exit(1)
@@ -55,7 +53,7 @@ def init(root_path: str, language: str) -> Data:
                 k: Animal(
                     v["baby_price"],
                     v["growth_time"],
-                    v["adult_sell_price"],
+                    v["sell_price"],
                     tuple(v["food"]),
                     v["food_needed_per_day"],
                     v["required_neatness"],
@@ -85,7 +83,7 @@ def init(root_path: str, language: str) -> Data:
 def load_player(root_path: str, text: Text) -> Player:
     print(text["start_4"])
     while True:
-        match display_option_and_get_input(text["start_5"], lambda x: 0 <= x < 3, text["input_error"], text["input_not_int"]):
+        match get_choice_in_options(text["start_5"], lambda x: 0 <= x < 3, text["input_error"], text["input_not_int"]):
             case 0:
                 f = True
                 while True:
@@ -119,9 +117,7 @@ def load_player(root_path: str, text: Text) -> Player:
 
 def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> None:
     while True:
-        match display_option_and_get_input(
-            data.text["farm_op_0"], lambda x: 0 <= x < 7, data.text["input_error"], data.text["input_not_int"]
-        ):
+        match get_choice_in_options(data.text["farm_op_0"], lambda x: 0 <= x < 7, data.text["input_error"], data.text["input_not_int"]):
             case 0:
                 m: dict[int, str] = {}
                 info = Display_info(data.text["farm_op_12"])
@@ -130,21 +126,21 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                     m[i] = k
                 print(data.text["farm_op_1"])
                 info.display()
-                choice_seed = display_request_and_get_int_input(
+                choice_seed = get_int_input(
                     data.text["farm_op_2"], lambda x: 0 <= x < len(m), data.text["farm_op_3"], data.text["input_not_int"]
                 )
                 if choice_seed == -1:
                     continue
-                if player.bag.seeds.get(m[choice_seed], 0) < len(choices):
+                if player.bag.seeds[m[choice_seed]] < len(choices):
                     print(data.text["farm_op_7"].format(data.text[m[choice_seed]]))
                     continue
                 player.bag.seeds[m[choice_seed]] -= len(choices)
                 for i in choices:
                     player.farmland[i].crop = m[choice_seed]
             case 1:
-                print(data.text["farm_op_5"].format(data.text["organic_fertilizer"], player.bag.items.get("organic_fertilizer", 0)))
-                print(data.text["farm_op_5"].format(data.text["chemical_fertilizer"], player.bag.items.get("chemical_fertilizer", 0)))
-                choice_fertilizer = display_option_and_get_input(
+                print(data.text["farm_op_5"].format(data.text["organic_fertilizer"], player.bag.items["organic_fertilizer"]))
+                print(data.text["farm_op_5"].format(data.text["chemical_fertilizer"], player.bag.items["chemical_fertilizer"]))
+                choice_fertilizer = get_choice_in_options(
                     data.text["farm_op_6"], lambda x: 0 <= x < 3, data.text["farm_op_3"], data.text["input_not_int"]
                 )
                 if choice_fertilizer == 2:
@@ -153,7 +149,7 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                     choice_fertilizer = "organic_fertilizer"
                 else:
                     choice_fertilizer = "chemical_fertilizer"
-                if player.bag.items.get(choice_fertilizer, 0) < len(choices):
+                if player.bag.items[choice_fertilizer] < len(choices):
                     print(data.text["farm_op_7"].format(data.text[choice_fertilizer]))
                     continue
                 player.bag.items[choice_fertilizer] -= len(choices)
@@ -164,7 +160,7 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                     else:
                         player.farmland[i].bug_appear_prob += 0.05
             case 2:
-                if not display_request_and_get_bool_input(data.text["farm_op_8"], False):
+                if not get_bool_input(data.text["farm_op_8"], False):
                     continue
                 crops: dict[str, int] = {}
                 for i in choices:
@@ -177,7 +173,7 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                         i.growth_time = 0
                         if i.ripe:
                             crop_name = i.crop.removesuffix("_seed")
-                            crops[crop_name] = crops.get(crop_name, 0) + 1
+                            crops[crop_name] = crops[crop_name] + 1
                         else:
                             i.soil_fertility = int(limit_range(i.soil_fertility, True, ri(100, 150) / 100, 1, 50, None))
                         i.ripe = False
@@ -187,13 +183,13 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                     print("    " + data.text[k] + f"*{v}" if v > 1 else "")
                 player.bag.crops.update(crops)
             case 3:
-                print(data.text["farm_op_5"].format(data.text["herbicide"], player.bag.items.get("herbicide", 0)))
-                choice_herbicide = display_option_and_get_input(
+                print(data.text["farm_op_5"].format(data.text["herbicide"], player.bag.items["herbicide"]))
+                choice_herbicide = get_choice_in_options(
                     data.text["farm_op_11"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"]
                 )
                 if choice_herbicide == 2:
                     continue
-                if choice_herbicide == 0 and player.bag.items.get("herbicide", 0) < len(choices):
+                if choice_herbicide == 0 and player.bag.items["herbicide"] < len(choices):
                     print(data.text["farm_op_7"].format(data.text["herbicide"]))
                     continue
                 if choice_herbicide == 0:
@@ -209,13 +205,13 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                         i.weed_appear_prob = limit_range(i.weed_appear_prob, False, ri(150, 250) / 100)
                         i.weed_appear = False
             case 4:
-                print(data.text["farm_op_5"].format(data.text["insecticide"], player.bag.items.get("insecticide", 0)))
-                choice_insecticide = display_option_and_get_input(
+                print(data.text["farm_op_5"].format(data.text["insecticide"], player.bag.items["insecticide"]))
+                choice_insecticide = get_choice_in_options(
                     data.text["farm_op_10"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"]
                 )
                 if choice_insecticide == 2:
                     continue
-                if choice_insecticide == 0 and player.bag.items.get("insecticide", 0) < len(choices):
+                if choice_insecticide == 0 and player.bag.items["insecticide"] < len(choices):
                     print(data.text["farm_op_7"].format(data.text["insecticide"]))
                     continue
                 if choice_insecticide == 0:
@@ -256,11 +252,9 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
 
 def farmland(player: Player, data: Data) -> None:
     while True:
-        match display_option_and_get_input(
-            data.text["farmland_0"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"]
-        ):
+        match get_choice_in_options(data.text["farmland_0"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"]):
             case 0:
-                choices = display_request_and_get_range_input(
+                choices = get_range_input(
                     data.text["farmland_1"],
                     lambda x: 0 <= x < player.farmland_size,
                     data.text["farmland_2"],
@@ -298,9 +292,7 @@ def farmland(player: Player, data: Data) -> None:
 
 def manage_corral(player: Player, data: Data, choices: tuple[int, ...]) -> None:
     while True:
-        match display_option_and_get_input(
-            data.text["corral_op_0"], lambda x: 0 <= x < 7, data.text["input_error"], data.text["input_not_int"]
-        ):
+        match get_choice_in_options(data.text["corral_op_0"], lambda x: 0 <= x < 7, data.text["input_error"], data.text["input_not_int"]):
             case 0:
                 pass
             case 1:
@@ -319,11 +311,9 @@ def manage_corral(player: Player, data: Data, choices: tuple[int, ...]) -> None:
 
 def corral(player: Player, data: Data) -> None:
     while True:
-        match display_option_and_get_input(
-            data.text["corral_0"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"]
-        ):
+        match get_choice_in_options(data.text["corral_0"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"]):
             case 0:
-                choices = display_request_and_get_range_input(
+                choices = get_range_input(
                     data.text["corral_1"],
                     lambda x: 0 <= x < player.corral_size,
                     data.text["corral_2"],
@@ -358,8 +348,81 @@ def corral(player: Player, data: Data) -> None:
                 return
 
 
-def shop(player: Player, data: Data) -> None:
-    pass
+def buy(player: Player, data: Data, kind: Literal["seeds", "items", "crops", "animals"]) -> None:
+    match kind:
+        case "seeds":
+            bag = player.bag.seeds
+            now_data = data.seeds
+        case "items":
+            bag = player.bag.items
+            now_data = data.items
+        case "crops":
+            bag = player.bag.crops
+            now_data = data.crops
+        case "animals":
+            bag = player.bag.animals
+            now_data = data.animals
+    while True:
+        info = Display_info(data.text["shop_0"])
+        d: dict[int, str] = {}
+        for i, (k, v) in enumerate(now_data.items()):
+            info.add((i + 1, data.text[k], v.sell_price))
+            d[i] = k
+        print(data.text["shop_1"].format(player.bag.money))
+        print(data.text["shop_7"])
+        info.display()
+        result = get_int_input(data.text["shop_8"], lambda x: 0 <= x < len(now_data), data.text["input_error"], data.text["input_not_int"])
+        if result == -1:
+            return
+        choice = d[result]
+        buy_number = 1 + get_int_input(
+            data.text["shop_9"],
+            lambda x: 0 <= x < player.bag.money // limit_range(now_data[choice].sell_price, True, 0.1, 1, float("inf"), 0),
+            data.text["shop_10"],
+            data.text["input_not_int"],
+        )
+        if buy_number <= 0:
+            return
+        bag[choice] = bag[choice] + buy_number
+        player.bag.money -= buy_number * now_data[choice].sell_price
+        print(data.text["shop_11"].format(buy_number, data.text[choice], now_data[choice].sell_price * buy_number))
+
+
+def sell(player: Player, data: Data, kind: Literal["seeds", "items", "crops", "animals"]) -> None:
+    match kind:
+        case "seeds":
+            bag = player.bag.seeds
+            now_data = data.seeds
+        case "items":
+            bag = player.bag.items
+            now_data = data.items
+        case "crops":
+            bag = player.bag.crops
+            now_data = data.crops
+        case "animals":
+            bag = player.bag.animals
+            now_data = data.animals
+    while True:
+        info = Display_info(data.text["shop_0"])
+        d: dict[int, str] = {}
+        for i, (k, v) in enumerate(bag.items()):
+            info.add((i + 1, data.text[k], now_data[k].sell_price, v))
+            d[i] = k
+        print(data.text["shop_1"].format(player.bag.money))
+        print(data.text["shop_2"])
+        info.display()
+        result = get_int_input(data.text["shop_3"], lambda x: 0 <= x < len(bag), data.text["input_error"], data.text["input_not_int"])
+        if result == -1:
+            return
+        choice = d[result]
+        sell_number = 1 + get_int_input(
+            data.text["shop_4"], lambda x: 0 <= x < bag[choice], data.text["shop_5"], data.text["input_not_int"]
+        )
+        if sell_number <= 0:
+            return
+        bag[choice] -= sell_number
+        player.bag.money += sell_number * now_data[choice].sell_price
+        print(data.text["shop_6"].format(sell_number, data.text[choice], now_data[choice].sell_price * sell_number))
 
 
 def next_day(player: Player, data: Data) -> None:
@@ -368,9 +431,7 @@ def next_day(player: Player, data: Data) -> None:
 
 def setting(player: Player, data: Data) -> None:
     while True:
-        match display_option_and_get_input(
-            data.text["other_0"], lambda x: 0 <= x < 4, data.text["input_error"], data.text["input_not_int"]
-        ):
+        match get_choice_in_options(data.text["other_0"], lambda x: 0 <= x < 4, data.text["input_error"], data.text["input_not_int"]):
             case 0:
                 print(data.text["other_1"])
                 for i in data.language:
@@ -385,7 +446,7 @@ def setting(player: Player, data: Data) -> None:
                         return
             case 1:
                 if isfile(f"{root_path}/archive/{player.name}.json"):
-                    result = display_request_and_get_bool_input(data.text["other_8"], False)
+                    result = get_bool_input(data.text["other_8"], False)
                 else:
                     result = True
                 if result:
@@ -398,7 +459,7 @@ def setting(player: Player, data: Data) -> None:
                     print(data.text["other_3"].format(player.name))
                     return
             case 2:
-                if display_request_and_get_bool_input(data.text["other_5"], False):
+                if get_bool_input(data.text["other_5"], False):
                     print(data.text["game_close"])
                     exit()
             case 3:
@@ -408,13 +469,33 @@ def setting(player: Player, data: Data) -> None:
 def main(player: Player, data: Data) -> None:
     print(data.text["main_0"])
     while True:
-        match display_option_and_get_input(data.text["main_1"], lambda x: 0 <= x < 5, data.text["input_error"], data.text["input_not_int"]):
+        match get_choice_in_options(data.text["main_1"], lambda x: 0 <= x < 5, data.text["input_error"], data.text["input_not_int"]):
             case 0:
                 farmland(player, data)
             case 1:
                 corral(player, data)
             case 2:
-                shop(player, data)
+                match get_choice_in_options(
+                    data.text["main_2"], lambda x: 0 <= x < 9, data.text["input_error"], data.text["input_not_int"]
+                ):
+                    case 0:
+                        buy(player, data, "seeds")
+                    case 1:
+                        buy(player, data, "items")
+                    case 2:
+                        buy(player, data, "crops")
+                    case 3:
+                        buy(player, data, "animals")
+                    case 4:
+                        sell(player, data, "seeds")
+                    case 5:
+                        sell(player, data, "items")
+                    case 6:
+                        sell(player, data, "crops")
+                    case 7:
+                        sell(player, data, "animals")
+                    case 8:
+                        continue
             case 3:
                 next_day(player, data)
             case 4:
