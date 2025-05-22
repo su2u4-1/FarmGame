@@ -48,7 +48,7 @@ class Display_info:
             print()
 
 
-def display_option_and_get_input(
+def get_choice_in_options(
     options: Sequence[str],
     within_range_condition: Callable[[int], bool],
     out_range_err_msg: str = "Please enter a valid number.",
@@ -79,7 +79,7 @@ def display_option_and_get_input(
             print(input_not_int_err_msg)
 
 
-def display_request_and_get_int_input(
+def get_int_input(
     request: str,
     within_range_condition: Callable[[int], bool],
     out_range_err_msg: str = "Please enter a valid number.",
@@ -119,7 +119,7 @@ def display_request_and_get_int_input(
             print(input_not_int_err_msg)
 
 
-def display_request_and_get_range_input(
+def get_range_input(
     request: str,
     within_range_condition: Callable[[int], bool],
     out_range_err_msg: str = "Please enter a valid number.",
@@ -249,9 +249,7 @@ def display_info(title: Union[Sequence[object], str], *items: Sequence[object]) 
     display.display()
 
 
-def display_request_and_get_bool_input(
-    request: str, default: Optional[bool] = None, input_err_msg: str = "Please enter 'y' or 'n'."
-) -> bool:
+def get_bool_input(request: str, default: Optional[bool] = None, input_err_msg: str = "Please enter 'y' or 'n'.") -> bool:
     """
     Displays a request to the user and returns a boolean input.
 
