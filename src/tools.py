@@ -1,7 +1,9 @@
 from typing import Optional, SupportsIndex
 
 
-def limit_range(value: float, multiply: bool, ratio: float, min_value: float = 0.01, max_value: float = 1, n_digits: Optional[SupportsIndex] = 2) -> float | int:
+def limit_range(
+    value: float, multiply: bool, ratio: float, min_value: float = 0.01, max_value: float = 1, n_digits: Optional[SupportsIndex] = 2
+) -> float | int:
     """
     Limit the value to a specified range and round it to a specified number of decimal places.
 

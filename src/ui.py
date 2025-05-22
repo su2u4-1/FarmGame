@@ -249,7 +249,9 @@ def display_info(title: Union[Sequence[object], str], *items: Sequence[object]) 
     display.display()
 
 
-def display_request_and_get_bool_input(request: str, default: Optional[bool] = None, input_err_msg: str = "Please enter 'y' or 'n'.") -> bool:
+def display_request_and_get_bool_input(
+    request: str, default: Optional[bool] = None, input_err_msg: str = "Please enter 'y' or 'n'."
+) -> bool:
     """
     Displays a request to the user and returns a boolean input.
 

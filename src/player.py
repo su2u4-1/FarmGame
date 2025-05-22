@@ -142,7 +142,12 @@ class Player:
             t.append(f'"{k}": {v}')
         s += ",".join(t)
         t = []
-        s += "}," + f'"money": {self.bag.money}' + "}," + f'"language": "{self.language}","farmland_size": {self.farmland_size},"farmland": ['
+        s += (
+            "},"
+            + f'"money": {self.bag.money}'
+            + "},"
+            + f'"language": "{self.language}","farmland_size": {self.farmland_size},"farmland": ['
+        )
         for i in range(self.farmland_size):
             t.append(
                 "{"
