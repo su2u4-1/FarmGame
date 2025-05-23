@@ -141,5 +141,9 @@
     "shop_8": "Enter the ID of the item you want to buy (enter -1 to cancel): ",
     "shop_9": "Enter the quantity you want to buy (enter -1 to cancel): ",
     "shop_10": "Quantity too low or insufficient funds",
-    "shop_11": "You bought {0} of {1} for {2} coins"
+    "shop_11": "You bought {0} of {1} for {2} coins",
+    "home_0": "Sleep | Check bag | Exit",
+    "home_1": "Spend the night in a dream",
+    "home_2": "View Seed Bag | View Item Bag | View Crop Bag | View Animal Bag | Close",
+    "home_3": "ID | Name | Quantity | Describe"
 }
