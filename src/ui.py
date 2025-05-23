@@ -4,12 +4,13 @@ from wcwidth import wcswidth
 
 
 class Display_info:
-    def __init__(self, title: Union[Sequence[object], str]) -> None:
+    def __init__(self, title: Union[Sequence[object], str], empty_msg: str) -> None:
         """
         Initializes the Display_info class with a title.
 
         Args:
             title (list[object] | str): The title to display.
+            empty_msg (str): The message to display when there are no items.
         """
         if isinstance(title, str):
             title = tuple(i.strip() for i in title.split("|"))
@@ -18,6 +19,7 @@ class Display_info:
         self.show = [title]
         self.size = len(title)
         self.length: list[int] = [wcswidth(t) for t in title]
+        self.empty_msg = empty_msg
 
     def add(self, item: Sequence[object]) -> None:
         """
@@ -46,6 +48,8 @@ class Display_info:
             for j in range(self.size):
                 print(f"[{row[j]}" + " " * (self.length[j] - wcswidth(row[j])) + "]", end="")
             print()
+        if len(self.show) == 1:
+            print(self.empty_msg)
 
 
 def get_choice_in_options(
@@ -230,23 +234,6 @@ def get_range_input(
         if t == 2:
             continue
         return tuple(set(result))
-
-
-def display_info(title: Union[Sequence[object], str], *items: Sequence[object]) -> None:
-    """
-    Displays information about a title and its items.
-
-    Args:
-        title (list[object] | str): The title to display.
-        item (Sequence[object]): The items to display.
-
-    Raises:
-        ValueError: If the length of an item exceeds the length of the title.
-    """
-    display = Display_info(title)
-    for item in items:
-        display.add(item)
-    display.display()
 
 
 def get_bool_input(request: str, default: Optional[bool] = None, input_err_msg: str = "Please enter 'y' or 'n'.") -> bool:

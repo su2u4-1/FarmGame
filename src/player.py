@@ -55,9 +55,10 @@ V = TypeVar("V")
 
 
 class DefaultDict(dict[K, V]):
-    def __init__(self, default_factory: Callable[[K], V], *args: Any, **kwargs: Any) -> None:
+    def __init__(self, default_factory: Callable[[K], V], delete_value: Callable[[K], V], *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, *kwargs)
         self.default_factory = default_factory
+        self.delete_value = delete_value
 
     def __missing__(self, key: K) -> V:
         return self.default_factory(key)
@@ -67,13 +68,19 @@ class DefaultDict(dict[K, V]):
             return super().__getitem__(key)
         return self.__missing__(key)
 
+    def __setitem__(self, key: K, value: V) -> None:
+        if value == self.delete_value(key):
+            del self[key]
+        else:
+            super().__setitem__(key, value)
+
 
 class Bag:
     def __init__(self) -> None:
-        self.items: DefaultDict[str, int] = DefaultDict(lambda _: 0)
-        self.seeds: DefaultDict[str, int] = DefaultDict(lambda _: 0)
-        self.crops: DefaultDict[str, int] = DefaultDict(lambda _: 0)
-        self.animals: DefaultDict[str, int] = DefaultDict(lambda _: 0)
+        self.items: DefaultDict[str, int] = DefaultDict(lambda _: 0, lambda _: 0)
+        self.seeds: DefaultDict[str, int] = DefaultDict(lambda _: 0, lambda _: 0)
+        self.crops: DefaultDict[str, int] = DefaultDict(lambda _: 0, lambda _: 0)
+        self.animals: DefaultDict[str, int] = DefaultDict(lambda _: 0, lambda _: 0)
         self.money = 100
 
 
@@ -102,10 +109,10 @@ class Player:
         try:
             self.name = data["name"]
             self.day = data["day"]
-            self.bag.items = DefaultDict(lambda _: 0, data["bag"]["items"])
-            self.bag.seeds = DefaultDict(lambda _: 0, data["bag"]["seeds"])
-            self.bag.crops = DefaultDict(lambda _: 0, data["bag"]["crops"])
-            self.bag.animals = DefaultDict(lambda _: 0, data["bag"]["animals"])
+            self.bag.items = DefaultDict(lambda _: 0, lambda _: 0, data["bag"]["items"])
+            self.bag.seeds = DefaultDict(lambda _: 0, lambda _: 0, data["bag"]["seeds"])
+            self.bag.crops = DefaultDict(lambda _: 0, lambda _: 0, data["bag"]["crops"])
+            self.bag.animals = DefaultDict(lambda _: 0, lambda _: 0, data["bag"]["animals"])
             self.bag.money = data["bag"]["money"]
             self.language = data["language"]
             self.farmland = []
