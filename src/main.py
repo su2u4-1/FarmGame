@@ -119,7 +119,7 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
         match get_choice_in_options(data.text["farm_op_0"], lambda x: 0 <= x < 7, data.text["input_error"], data.text["input_not_int"]):
             case 0:
                 m: dict[int, str] = {}
-                info = Display_info(data.text["farm_op_12"])
+                info = Display_info(data.text["farm_op_12"], data.text["no_item"])
                 for i, (k, v) in enumerate(player.bag.seeds.items()):
                     info.add((i + 1, data.text[k], v))
                     m[i] = k
@@ -155,11 +155,10 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                     continue
                 crops = harvest_remove(player, choices)
                 print(data.text["farm_op_9"])
-                if len(crops) == 0:
-                    print("    " + data.text["bag_0"])
-                else:
-                    for k, v in crops.items():
-                        print("    " + data.text[k] + f"*{v}" if v > 1 else "")
+                info = Display_info(data.text["farm_op_13"], data.text["no_item"])
+                for k, v in crops.items():
+                    info.add((data.text[k], v))
+                info.display()
                 player.bag.crops.update(crops)
             case 3:
                 print(data.text["farm_op_5"].format(data.text["herbicide"], player.bag.items["herbicide"]))
@@ -184,7 +183,7 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                     continue
                 disinfestation(player, choices, choice_insecticide == 0)
             case 5:
-                info = Display_info(data.text["farmland_info"])
+                info = Display_info(data.text["farmland_info"], data.text["no_item"])
                 for i in choices:
                     j = player.farmland[i]
                     info.add(
@@ -224,7 +223,7 @@ def farmland(player: Player, data: Data) -> None:
                     choices = tuple(range(player.farmland_size))
                 manage_farmland(player, data, choices)
             case 1:
-                info = Display_info(data.text["farmland_info"])
+                info = Display_info(data.text["farmland_info"], data.text["no_item"])
                 for i in range(player.farmland_size):
                     j = player.farmland[i]
                     info.add(
@@ -283,7 +282,7 @@ def corral(player: Player, data: Data) -> None:
                     choices = tuple(range(player.corral_size))
                 manage_corral(player, data, choices)
             case 1:
-                info = Display_info(data.text["corral_info"])
+                info = Display_info(data.text["corral_info"], data.text["no_item"])
                 for i in range(player.corral_size):
                     j = player.corral[i]
                     info.add(
@@ -320,10 +319,10 @@ def buy(player: Player, data: Data, kind: Literal["seeds", "items", "crops", "an
             bag = player.bag.animals
             now_data = data.animals
     while True:
-        info = Display_info(data.text["shop_0"])
+        info = Display_info(data.text["shop_0"], data.text["no_item"])
         d: dict[int, str] = {}
         for i, (k, v) in enumerate(now_data.items()):
-            info.add((i + 1, data.text[k], v.sell_price))
+            info.add((i + 1, data.text[k], int(limit_range(v.sell_price, "*", 1.5, 1, float("inf"), 0))))
             d[i] = k
         print(data.text["shop_1"].format(player.bag.money))
         print(data.text["shop_7"])
@@ -332,17 +331,18 @@ def buy(player: Player, data: Data, kind: Literal["seeds", "items", "crops", "an
         if result == -1:
             return
         choice = d[result]
+        buy_price = int(limit_range(now_data[choice].sell_price, "*", 1.5, 1, float("inf"), 0))
         buy_number = 1 + get_int_input(
             data.text["shop_9"],
-            lambda x: 0 <= x < player.bag.money // limit_range(now_data[choice].sell_price, True, 0.1, 1, float("inf"), 0),
+            lambda x: 0 <= x < player.bag.money // buy_price,
             data.text["shop_10"],
             data.text["input_not_int"],
         )
         if buy_number <= 0:
             return
         bag[choice] = bag[choice] + buy_number
-        player.bag.money -= buy_number * now_data[choice].sell_price
-        print(data.text["shop_11"].format(buy_number, data.text[choice], now_data[choice].sell_price * buy_number))
+        player.bag.money -= buy_number * buy_price
+        print(data.text["shop_11"].format(buy_number, data.text[choice], buy_price * buy_number))
 
 
 def sell(player: Player, data: Data, kind: Literal["seeds", "items", "crops", "animals"]) -> None:
@@ -360,7 +360,7 @@ def sell(player: Player, data: Data, kind: Literal["seeds", "items", "crops", "a
             bag = player.bag.animals
             now_data = data.animals
     while True:
-        info = Display_info(data.text["shop_0"])
+        info = Display_info(data.text["shop_0"], data.text["no_item"])
         d: dict[int, str] = {}
         for i, (k, v) in enumerate(bag.items()):
             info.add((i + 1, data.text[k], now_data[k].sell_price, v))
@@ -428,27 +428,28 @@ def main(player: Player, data: Data) -> None:
             case 1:
                 corral(player, data)
             case 2:
-                match get_choice_in_options(
-                    data.text["main_2"], lambda x: 0 <= x < 9, data.text["input_error"], data.text["input_not_int"]
-                ):
-                    case 0:
-                        buy(player, data, "seeds")
-                    case 1:
-                        buy(player, data, "items")
-                    case 2:
-                        buy(player, data, "crops")
-                    case 3:
-                        buy(player, data, "animals")
-                    case 4:
-                        sell(player, data, "seeds")
-                    case 5:
-                        sell(player, data, "items")
-                    case 6:
-                        sell(player, data, "crops")
-                    case 7:
-                        sell(player, data, "animals")
-                    case 8:
-                        continue
+                while True:
+                    match get_choice_in_options(
+                        data.text["main_2"], lambda x: 0 <= x < 9, data.text["input_error"], data.text["input_not_int"]
+                    ):
+                        case 0:
+                            buy(player, data, "seeds")
+                        case 1:
+                            buy(player, data, "items")
+                        case 2:
+                            buy(player, data, "crops")
+                        case 3:
+                            buy(player, data, "animals")
+                        case 4:
+                            sell(player, data, "seeds")
+                        case 5:
+                            sell(player, data, "items")
+                        case 6:
+                            sell(player, data, "crops")
+                        case 7:
+                            sell(player, data, "animals")
+                        case 8:
+                            break
             case 3:
                 next_day(player, data)
             case 4:
