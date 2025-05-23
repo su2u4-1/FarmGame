@@ -5,7 +5,7 @@ from typing import Literal
 from data import *
 from player import *
 from ui import *
-from update import *
+from other import *
 
 
 def init(root_path: str, language: str) -> Data:
@@ -451,7 +451,35 @@ def main(player: Player, data: Data) -> None:
                         case 8:
                             break
             case 3:
-                next_day(player, data)
+                while True:
+                    match get_choice_in_options(
+                        data.text["home_0"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"]
+                    ):
+                        case 0:
+                            print(data.text["home_1"])
+                            next_day(player, data)
+                        case 1:
+                            print(data.text["shop_1"].format(player.bag.money))
+                            while True:
+                                match get_choice_in_options(
+                                    data.text["home_2"], lambda x: 0 <= x < 5, data.text["input_error"], data.text["input_not_int"]
+                                ):
+                                    case 0:
+                                        bag = player.bag.seeds
+                                    case 1:
+                                        bag = player.bag.items
+                                    case 2:
+                                        bag = player.bag.crops
+                                    case 3:
+                                        bag = player.bag.animals
+                                    case 4:
+                                        break
+                                info = Display_info(data.text["home_3"], data.text["no_item"])
+                                for i, (k, v) in enumerate(bag.items()):  # type: ignore
+                                    info.add((i + 1, data.text[k], v, data.text[k + "_describe"]))
+                                info.display()
+                        case 2:
+                            break
             case 4:
                 setting(player, data)
 
