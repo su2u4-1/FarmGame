@@ -322,7 +322,7 @@ def buy(player: Player, data: Data, kind: Literal["seeds", "items", "crops", "an
         info = Display_info(data.text["shop_0"], data.text["no_item"])
         d: dict[int, str] = {}
         for i, (k, v) in enumerate(now_data.items()):
-            info.add((i + 1, data.text[k], int(limit_range(v.sell_price, "*", 1.5, 1, float("inf"), 0))))
+            info.add((i + 1, data.text[k], int(limit_range(v.sell_price, "*", 1.2, 1, float("inf"), 0))))
             d[i] = k
         print(data.text["shop_1"].format(player.bag.money))
         print(data.text["shop_7"])
@@ -331,7 +331,7 @@ def buy(player: Player, data: Data, kind: Literal["seeds", "items", "crops", "an
         if result == -1:
             return
         choice = d[result]
-        buy_price = int(limit_range(now_data[choice].sell_price, "*", 1.5, 1, float("inf"), 0))
+        buy_price = int(limit_range(now_data[choice].sell_price, "*", 1.2, 1, float("inf"), 0))
         buy_number = 1 + get_int_input(
             data.text["shop_9"],
             lambda x: 0 <= x < player.bag.money // buy_price,
@@ -384,11 +384,11 @@ def sell(player: Player, data: Data, kind: Literal["seeds", "items", "crops", "a
 
 def setting(player: Player, data: Data) -> None:
     while True:
-        match get_choice_in_options(data.text["other_0"], lambda x: 0 <= x < 4, data.text["input_error"], data.text["input_not_int"]):
+        match get_choice_in_options(data.text["other_0"], lambda x: 0 <= x < 5, data.text["input_error"], data.text["input_not_int"]):
             case 0:
                 print(data.text["other_1"])
                 for i in data.language:
-                    print(i)
+                    print("    " + i)
                 while True:
                     choice = input(data.text["other_2"])
                     if choice not in data.language:
@@ -412,10 +412,14 @@ def setting(player: Player, data: Data) -> None:
                     print(data.text["other_3"].format(player.name))
                     return
             case 2:
+                print(data.text["other_10"].format(player.name))
+                player.name = input(data.text["other_9"])
+                print(data.text["other_11"].format(player.name))
+            case 3:
                 if get_bool_input(data.text["other_5"], False):
                     print(data.text["game_close"])
                     exit()
-            case 3:
+            case 4:
                 return
 
 
