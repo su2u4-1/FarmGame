@@ -134,6 +134,7 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                     print(data.text["farm_op_7"].format(data.text[m[choice_seed]]))
                     continue
                 plant(player, choices, m[choice_seed])
+                print(data.text["farm_op_14"])
             case 1:
                 print(data.text["farm_op_5"].format(data.text["organic_fertilizer"], player.bag.items["organic_fertilizer"]))
                 print(data.text["farm_op_5"].format(data.text["chemical_fertilizer"], player.bag.items["chemical_fertilizer"]))

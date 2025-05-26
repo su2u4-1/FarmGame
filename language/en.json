@@ -109,6 +109,7 @@
     "farm_op_11": "Herbicide | Manual | Cancel",
     "farm_op_12": "ID | Seed | Quantity",
     "farm_op_13": "Crop | Quantity",
+    "farm_op_14": "Planting successful",
     "farmland_info": "ID | Crop | Growth Time | Soil Fertility | Bug Chance | Bug Count | Weed Chance | Weeds Present | Harvestable | Organic",
     "farmland_0": "Take Care of Farmland | Details | Exit",
     "farmland_1": "Field number to manage (within range, enter -1 to cancel)",
