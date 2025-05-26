@@ -89,6 +89,9 @@ def weed(player: Player, choices_farmland_id: tuple[int, ...], herbicide: bool) 
     else:
         for i in choices_farmland_id:
             i = player.farmland[i]
+            player.energy -= ri(1, 5)
+            if i.weed_appear:
+                player.energy -= ri(5, 10)
             i.weed_appear_prob = limit_range(i.weed_appear_prob, "/", ri(150, 250) / 100)
             i.weed_appear = False
 
@@ -104,12 +107,16 @@ def disinfestation(player: Player, choices_farmland_id: tuple[int, ...], insecti
     else:
         for i in choices_farmland_id:
             i = player.farmland[i]
+            player.energy -= ri(1, 5)
+            if i.bug_number > 0:
+                player.energy -= ri(2, 10) * i.bug_number
             i.bug_appear_prob = limit_range(i.bug_appear_prob, "/", ri(150, 250) / 100)
             i.bug_number = ri(0, i.bug_number // 5)
 
 
 def next_day(player: Player, data: Data) -> None:
     player.day += 1
+    player.energy = 100
     for i in player.farmland:
         if i.crop != "":
             if i.ripe:

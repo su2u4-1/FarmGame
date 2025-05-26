@@ -171,7 +171,11 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                 if choice_herbicide == 0 and player.bag.items["herbicide"] < len(choices):
                     print(data.text["farm_op_7"].format(data.text["herbicide"]))
                     continue
+                if choice_herbicide == 1 and player.energy < len(choices):
+                    print(data.text["farm_op_17"])
                 weed(player, choices, choice_herbicide == 0)
+                if choice_herbicide == 1:
+                    print(data.text["farm_op_16"].format(player.energy))
             case 4:
                 print(data.text["farm_op_5"].format(data.text["insecticide"], player.bag.items["insecticide"]))
                 choice_insecticide = get_choice_in_options(
@@ -182,7 +186,11 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                 if choice_insecticide == 0 and player.bag.items["insecticide"] < len(choices):
                     print(data.text["farm_op_7"].format(data.text["insecticide"]))
                     continue
+                if choice_insecticide == 1 and player.energy < len(choices):
+                    print(data.text["farm_op_17"])
                 disinfestation(player, choices, choice_insecticide == 0)
+                if choice_insecticide == 1:
+                    print(data.text["farm_op_16"].format(player.energy))
             case 5:
                 info = Display_info(data.text["farmland_info"], data.text["no_item"])
                 for i in choices:

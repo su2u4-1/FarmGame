@@ -98,6 +98,7 @@ class Player:
             self.farmland.append(Farmland())
         for _ in range(self.corral_size):
             self.corral.append(Corral())
+        self.energy = 100
 
     def load(self, file: str) -> int:
         try:
@@ -147,6 +148,7 @@ class Player:
                         hunger=data["corral"][i]["hunger"],
                     )
                 )
+            self.energy = data["energy"]
         except KeyError as e:
             print(f"Error: {e}")
             return 2
@@ -196,5 +198,5 @@ class Player:
                 + "}"
             )
         s += ",".join(t)
-        s += "]}"
+        s += "]," + f'"energy": {self.energy}' + "}"
         return s

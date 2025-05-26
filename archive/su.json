@@ -146,5 +146,6 @@
             "grow_up": false,
             "hunger": 0
         }
-    ]
+    ],
+    "energy": 100
 }
