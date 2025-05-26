@@ -51,7 +51,7 @@ def plant(player: Player, choices_farmland_id: tuple[int, ...], choice_seed_id: 
 def fertilize(player: Player, choices_farmland_id: tuple[int, ...], organic: bool) -> None:
     player.bag.items["organic_fertilizer" if organic else "chemical_fertilizer"] -= len(choices_farmland_id)
     for i in choices_farmland_id:
-        player.farmland[i].soil_fertility += 1
+        player.farmland[i].soil_fertility += ri(1, ri(3, 5))
         if organic:
             player.farmland[i].bug_appear_prob += 0.05
         else:
@@ -112,12 +112,12 @@ def next_day(player: Player, data: Data) -> None:
     for i in player.farmland:
         if i.crop != "":
             if i.ripe:
-                i.bug_appear_prob = limit_range(i.bug_appear_prob, "*", ri(150, 200) / 100)
+                i.bug_appear_prob = limit_range(i.bug_appear_prob, "+", ri(5, 50) / 100)
             else:
-                i.bug_appear_prob = limit_range(i.bug_appear_prob, "*", ri(100, 150) / 100)
+                i.bug_appear_prob = limit_range(i.bug_appear_prob, "+", ri(1, 30) / 100)
             if i.bug_appear_prob * 100 > ri(0, 100):
                 i.bug_number += 1
-            i.weed_appear_prob = limit_range(i.weed_appear_prob, "*", ri(100, 150) / 100)
+            i.weed_appear_prob = limit_range(i.weed_appear_prob, "+", ri(1, 30) / 100)
             if i.weed_appear_prob * 100 > ri(0, 100):
                 i.weed_appear = True
             if data.crops[i.crop].pest_resistance <= i.bug_number:

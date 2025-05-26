@@ -1,14 +1,14 @@
 {
     "organic_fertilizer": {
-        "sell_price": -1
+        "sell_price": 5
     },
     "chemical_fertilizer": {
-        "sell_price": -1
+        "sell_price": 3
     },
     "insecticide": {
-        "sell_price": -1
+        "sell_price": 5
     },
     "herbicide": {
-        "sell_price": -1
+        "sell_price": 5
     }
 }

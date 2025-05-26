@@ -158,8 +158,8 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                 info = Display_info(data.text["farm_op_13"], data.text["no_item"])
                 for k, v in crops.items():
                     info.add((data.text[k], v))
+                    player.bag.crops[k] += v
                 info.display()
-                player.bag.crops.update(crops)
             case 3:
                 print(data.text["farm_op_5"].format(data.text["herbicide"], player.bag.items["herbicide"]))
                 choice_herbicide = get_choice_in_options(
@@ -462,6 +462,7 @@ def main(player: Player, data: Data) -> None:
                         case 0:
                             print(data.text["home_1"])
                             next_day(player, data)
+                            print(data.text["home_4"].format(player.day))
                         case 1:
                             print(data.text["shop_1"].format(player.bag.money))
                             while True:

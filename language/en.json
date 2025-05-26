@@ -120,8 +120,6 @@
     "corral_2": "Corral ID {0} does not exist",
     "corral_3": "Current number of corrals: {0}",
     "corral_op_0": "Add Animal | Feed | Slaughter | Clean | Inject | Info | Exit",
-    "next_day_0": "You went home and slept",
-    "next_day_1": "Today is Day {0}",
     "main_0": "Game Start",
     "main_1": "Farmland | Corral | Shop | Home | Other",
     "main_2": "Buy Seeds | Buy Items | Buy Crops | Buy Animals | Sell Seeds | Sell Items | Sell Crops | Sell Animals | Exit",
