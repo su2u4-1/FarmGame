@@ -425,6 +425,7 @@ def setting(player: Player, data: Data) -> None:
 
 def main(player: Player, data: Data) -> None:
     print(data.text["main_0"])
+    print(data.text["home_4"].format(player.day))
     while True:
         match get_choice_in_options(data.text["main_1"], lambda x: 0 <= x < 5, data.text["input_error"], data.text["input_not_int"]):
             case 0:

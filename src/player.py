@@ -87,7 +87,7 @@ class Bag:
 class Player:
     def __init__(self) -> None:
         self.name = "username"
-        self.day = 0
+        self.day = 1
         self.bag = Bag()
         self.farmland: list[Farmland] = []
         self.corral: list[Corral] = []

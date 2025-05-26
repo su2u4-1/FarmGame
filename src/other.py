@@ -109,6 +109,7 @@ def disinfestation(player: Player, choices_farmland_id: tuple[int, ...], insecti
 
 
 def next_day(player: Player, data: Data) -> None:
+    player.day += 1
     for i in player.farmland:
         if i.crop != "":
             if i.ripe:
