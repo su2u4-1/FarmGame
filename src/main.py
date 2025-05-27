@@ -151,6 +151,7 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                     print(data.text["farm_op_7"].format(data.text[choice_fertilizer]))
                     continue
                 fertilize(player, choices, choice_fertilizer == "organic_fertilizer")
+                print(data.text["farm_op_18"])
             case 2:
                 if not get_bool_input(data.text["farm_op_8"], False):
                     continue
@@ -174,6 +175,7 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                 if choice_herbicide == 1 and player.energy < len(choices):
                     print(data.text["farm_op_17"])
                 weed(player, choices, choice_herbicide == 0)
+                print(data.text["farm_op_19"])
                 if choice_herbicide == 1:
                     print(data.text["farm_op_16"].format(player.energy))
             case 4:
@@ -189,6 +191,7 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                 if choice_insecticide == 1 and player.energy < len(choices):
                     print(data.text["farm_op_17"])
                 disinfestation(player, choices, choice_insecticide == 0)
+                print(data.text["farm_op_20"])
                 if choice_insecticide == 1:
                     print(data.text["farm_op_16"].format(player.energy))
             case 5:
