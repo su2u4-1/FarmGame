@@ -1,4 +1,5 @@
 from json import load
+from os import listdir
 from os.path import dirname, abspath, isfile
 from typing import Literal
 
@@ -84,6 +85,10 @@ def load_player(root_path: str, text: Text) -> Player:
     while True:
         match get_choice_in_options(text["start_5"], lambda x: 0 <= x < 3, text["input_error"], text["input_not_int"]):
             case 0:
+                print(text["start_7"])
+                for i in listdir(f"{root_path}/archive"):
+                    if i.endswith(".json"):
+                        print(f"    {i[:-5]}")
                 f = True
                 while True:
                     name = input(text["start_0"])
@@ -400,9 +405,10 @@ def setting(player: Player, data: Data) -> None:
     while True:
         match get_choice_in_options(data.text["other_0"], lambda x: 0 <= x < 5, data.text["input_error"], data.text["input_not_int"]):
             case 0:
-                print(data.text["other_1"])
+                info = DisplayInfo(data.text["other_1"], data.text["no_item"])
                 for i in data.language:
-                    print("    " + i)
+                    info.add((i, data.text[i]))
+                info.display()
                 while True:
                     choice = input(data.text["other_2"])
                     if choice not in data.language:
