@@ -3,7 +3,7 @@ from typing import Callable, Optional, Sequence, Union
 from wcwidth import wcswidth
 
 
-class Display_info:
+class DisplayInfo:
     def __init__(self, title: Union[Sequence[object], str], empty_msg: str) -> None:
         """
         Initializes the Display_info class with a title.
