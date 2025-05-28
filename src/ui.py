@@ -196,7 +196,7 @@ def get_range_input(
     if not request.endswith(":") and not request.endswith(": "):
         request += ": "
     while True:
-        choice = input(request)
+        choice = input(request).strip()
         if stop_condition(choice):
             return stop_flag
         elif "all" in choice and "all" in flags:
