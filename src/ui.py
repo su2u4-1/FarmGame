@@ -73,14 +73,16 @@ def get_choice_in_options(
     show = "".join(f"[{i + 1}.{option.strip()}]" for i, option in enumerate(options)) + ": "
 
     while True:
-        try:
-            choice = int(input(show))
-            if within_range_condition(choice - 1):
-                return choice - 1
-            else:
-                print(out_range_err_msg)
-        except ValueError:
+        choice = input(show).strip()
+        if choice.isdigit():
+            choice = int(choice)
+        else:
             print(input_not_int_err_msg)
+            continue
+        if within_range_condition(choice - 1):
+            return choice - 1
+        else:
+            print(out_range_err_msg)
 
 
 def get_int_input(
@@ -113,14 +115,15 @@ def get_int_input(
         choice = input(request)
         if stop_condition(choice):
             return stop_flag
-        try:
+        if choice.isdigit():
             choice = int(choice)
-            if within_range_condition(choice - 1):
-                return choice - 1
-            else:
-                print(out_range_err_msg)
-        except ValueError:
+        else:
             print(input_not_int_err_msg)
+            continue
+        if within_range_condition(choice - 1):
+            return choice - 1
+        else:
+            print(out_range_err_msg)
 
 
 def get_range_input(
@@ -177,9 +180,9 @@ def get_range_input(
             if not discard_err_item[2]:
                 return 2
             return 1
-        try:
+        if s.isdigit() and e.isdigit():
             s, e = int(s), int(e)
-        except ValueError:
+        else:
             print(input_not_int_err_msg)
             if not discard_err_item[1]:
                 return 2
@@ -214,9 +217,9 @@ def get_range_input(
             elif "~" in flags and "~" in i:
                 t = get_range(i.split("~"), result)
             else:
-                try:
+                if i.isdigit():
                     i = int(i)
-                except ValueError:
+                else:
                     print(input_not_int_err_msg)
                     if not discard_err_item[1]:
                         t = 2
