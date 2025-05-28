@@ -207,9 +207,9 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                             j.bug_appear_prob,
                             j.bug_number,
                             j.weed_appear_prob,
-                            j.weed_appear,
-                            j.ripe,
-                            j.organic,
+                            "O" if j.weed_appear else "X",
+                            "O" if j.ripe else "X",
+                            "O" if j.organic else "X",
                         )
                     )
                 print(data.text["farmland_3"].format(len(choices)))
@@ -247,9 +247,9 @@ def farmland(player: Player, data: Data) -> None:
                             j.bug_appear_prob,
                             j.bug_number,
                             j.weed_appear_prob,
-                            j.weed_appear,
-                            j.ripe,
-                            j.organic,
+                            "O" if j.weed_appear else "X",
+                            "O" if j.ripe else "X",
+                            "O" if j.organic else "X",
                         )
                     )
                 print(data.text["farmland_3"].format(player.farmland_size))
@@ -306,8 +306,8 @@ def corral(player: Player, data: Data) -> None:
                             j.neatness,
                             j.health,
                             j.sick_prob,
-                            j.sick,
-                            j.grow_up,
+                            "O" if j.sick else "X",
+                            "O" if j.grow_up else "X",
                         )
                     )
                 print(data.text["corral_3"].format(player.corral_size))
