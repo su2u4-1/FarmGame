@@ -1,32 +1,42 @@
 {
     "wheat_seed": {
-        "sell_price": 5
+        "sell_price": 4,
+        "buy_price": 5
     },
     "corn_seed": {
-        "sell_price": 10
+        "sell_price": 8,
+        "buy_price": 10
     },
     "potato_seed": {
-        "sell_price": 8
+        "sell_price": 6,
+        "buy_price": 8
     },
     "tomato_seed": {
-        "sell_price": 12
+        "sell_price": 10,
+        "buy_price": 12
     },
     "carrot_seed": {
-        "sell_price": 7
+        "sell_price": 6,
+        "buy_price": 7
     },
     "strawberry_seed": {
-        "sell_price": 15
+        "sell_price": 12,
+        "buy_price": 15
     },
     "green_seed": {
-        "sell_price": 18
+        "sell_price": 14,
+        "buy_price": 18
     },
     "spinach_seed": {
-        "sell_price": 6
+        "sell_price": 5,
+        "buy_price": 6
     },
     "onion_seed": {
-        "sell_price": 9
+        "sell_price": 7,
+        "buy_price": 9
     },
     "pumpkin_seed": {
-        "sell_price": 20
+        "sell_price": 16,
+        "buy_price": 20
     }
 }

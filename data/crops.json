@@ -1,61 +1,71 @@
 {
     "wheat": {
         "growth_time": 3,
-        "sell_price": 10,
+        "sell_price": 23,
+        "buy_price": 29,
         "soil_needed": 2,
         "pest_resistance": 4
     },
     "corn": {
         "growth_time": 5,
-        "sell_price": 20,
+        "sell_price": 30,
+        "buy_price": 38,
         "soil_needed": 3,
         "pest_resistance": 5
     },
     "potato": {
         "growth_time": 4,
-        "sell_price": 15,
+        "sell_price": 32,
+        "buy_price": 40,
         "soil_needed": 2,
         "pest_resistance": 3
     },
     "tomato": {
         "growth_time": 6,
-        "sell_price": 25,
+        "sell_price": 30,
+        "buy_price": 38,
         "soil_needed": 4,
         "pest_resistance": 2
     },
     "carrot": {
         "growth_time": 4,
-        "sell_price": 14,
+        "sell_price": 31,
+        "buy_price": 39,
         "soil_needed": 2,
         "pest_resistance": 4
     },
     "strawberry": {
         "growth_time": 5,
-        "sell_price": 30,
+        "sell_price": 35,
+        "buy_price": 44,
         "soil_needed": 3,
         "pest_resistance": 3
     },
     "green": {
         "growth_time": 7,
-        "sell_price": 35,
+        "sell_price": 39,
+        "buy_price": 49,
         "soil_needed": 4,
         "pest_resistance": 5
     },
     "spinach": {
         "growth_time": 3,
-        "sell_price": 12,
+        "sell_price": 42,
+        "buy_price": 52,
         "soil_needed": 1,
         "pest_resistance": 4
     },
     "onion": {
         "growth_time": 6,
-        "sell_price": 20,
+        "sell_price": 33,
+        "buy_price": 41,
         "soil_needed": 3,
         "pest_resistance": 5
     },
     "pumpkin": {
         "growth_time": 8,
-        "sell_price": 40,
+        "sell_price": 39,
+        "buy_price": 49,
         "soil_needed": 5,
         "pest_resistance": 3
     }
