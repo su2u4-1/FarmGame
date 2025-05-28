@@ -143,7 +143,13 @@ def next_day(player: Player, data: Data) -> None:
                 print(data.text["class_0"].format(data.text[i.crop]))
             if i.growth_time >= data.crops[i.crop].growth_time:
                 i.ripe = True
-        elif i.soil_fertility > 0:
-            i.soil_fertility -= 1
+        else:
+            i.weed_appear_prob = limit_range(i.weed_appear_prob, "+", ri(1, 30) / 100)
+            if i.weed_appear_prob * 100 > ri(0, 100):
+                i.weed_appear = True
+            if i.soil_fertility < 10 and not i.weed_appear:
+                i.soil_fertility += 1
+            elif i.weed_appear and i.soil_fertility > 1:
+                i.soil_fertility -= 1
     for i in player.corral:
         pass
