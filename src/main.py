@@ -77,7 +77,12 @@ def init(root_path: str, language: str) -> Data:
         print(text["load_data_error"].format("language_list", e))
         exit(1)
 
-    return Data(text, items, seeds, crops, animals, language_list)
+    gameplay = 0
+    for i in text.keys():
+        if i.startswith("page_"):
+            gameplay += 1
+
+    return Data(text, items, seeds, crops, animals, language_list, gameplay)
 
 
 def load_player(root_path: str, text: Text) -> Player:
@@ -130,9 +135,7 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                     m[i] = k
                 print(data.text["farm_op_1"])
                 info.display()
-                choice_seed = get_int_input(
-                    data.text["farm_op_2"], lambda x: 0 <= x < len(m), data.text["farm_op_3"], data.text["input_not_int"]
-                )
+                choice_seed = get_int_input(data.text["farm_op_2"], lambda x: 0 <= x < len(m), data.text["farm_op_3"], data.text["input_not_int"])
                 if choice_seed == -1:
                     continue
                 if player.bag.seeds[m[choice_seed]] < len(choices):
@@ -143,9 +146,7 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
             case 1:
                 print(data.text["farm_op_5"].format(data.text["organic_fertilizer"], player.bag.items["organic_fertilizer"]))
                 print(data.text["farm_op_5"].format(data.text["chemical_fertilizer"], player.bag.items["chemical_fertilizer"]))
-                choice_fertilizer = get_choice_in_options(
-                    data.text["farm_op_6"], lambda x: 0 <= x < 3, data.text["farm_op_3"], data.text["input_not_int"]
-                )
+                choice_fertilizer = get_choice_in_options(data.text["farm_op_6"], lambda x: 0 <= x < 3, data.text["farm_op_3"], data.text["input_not_int"])
                 if choice_fertilizer == 2:
                     continue
                 if choice_fertilizer == 0:
@@ -169,9 +170,7 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                 info.display()
             case 3:
                 print(data.text["farm_op_5"].format(data.text["herbicide"], player.bag.items["herbicide"]))
-                choice_herbicide = get_choice_in_options(
-                    data.text["farm_op_11"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"]
-                )
+                choice_herbicide = get_choice_in_options(data.text["farm_op_11"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"])
                 if choice_herbicide == 2:
                     continue
                 if choice_herbicide == 0 and player.bag.items["herbicide"] < len(choices):
@@ -186,9 +185,7 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                     print(data.text["farm_op_16"].format(player.energy))
             case 4:
                 print(data.text["farm_op_5"].format(data.text["insecticide"], player.bag.items["insecticide"]))
-                choice_insecticide = get_choice_in_options(
-                    data.text["farm_op_10"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"]
-                )
+                choice_insecticide = get_choice_in_options(data.text["farm_op_10"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"])
                 if choice_insecticide == 2:
                     continue
                 if choice_insecticide == 0 and player.bag.items["insecticide"] < len(choices):
@@ -391,9 +388,7 @@ def sell(player: Player, data: Data, kind: Literal["seeds", "items", "crops", "a
         if result == -1:
             return
         choice = d[result]
-        sell_number = 1 + get_int_input(
-            data.text["shop_4"], lambda x: 0 <= x < bag[choice], data.text["shop_5"], data.text["input_not_int"]
-        )
+        sell_number = 1 + get_int_input(data.text["shop_4"], lambda x: 0 <= x < bag[choice], data.text["shop_5"], data.text["input_not_int"])
         if sell_number <= 0:
             return
         bag[choice] -= sell_number
@@ -443,20 +438,70 @@ def setting(player: Player, data: Data) -> None:
                 return
 
 
+def docs(data: Data) -> None:
+    while True:
+        match get_choice_in_options(data.text["docs_0"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"]):
+            case 0:
+                while True:
+                    keys = ()
+                    match get_choice_in_options(data.text["docs_1"], lambda x: 0 <= x < 5, data.text["input_error"], data.text["input_not_int"]):
+                        case 0:
+                            keys = data.items.keys()
+                        case 1:
+                            keys = data.crops.keys()
+                        case 2:
+                            keys = data.animals.keys()
+                        case 3:
+                            keys = data.seeds.keys()
+                        case 4:
+                            break
+                    info = DisplayInfo(data.text["docs_2"], data.text["no_item"])
+                    for i in keys:
+                        info.add((data.text[i], data.text[i + "_describe"]))
+                    info.display()
+            case 1:
+                pages = 0
+                while True:
+                    print(data.text[f"page_{pages}"])
+                    if pages == 0 and data.gameplay_number == 1:
+                        if get_choice_in_options(data.text["docs_6"], lambda x: x == 0, data.text["input_error"], data.text["input_not_int"]) == 0:
+                            break
+                    elif pages == 0:
+                        match get_choice_in_options(data.text["docs_3"], lambda x: 0 <= x < 2, data.text["input_error"], data.text["input_not_int"]):
+                            case 0:
+                                pages = 1
+                            case 1:
+                                break
+                    elif pages > 0 and pages < data.gameplay_number - 1:
+                        match get_choice_in_options(data.text["docs_4"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"]):
+                            case 0:
+                                pages -= 1
+                            case 1:
+                                pages += 1
+                            case 2:
+                                break
+                    elif pages == data.gameplay_number - 1:
+                        match get_choice_in_options(data.text["docs_5"], lambda x: 0 <= x < 2, data.text["input_error"], data.text["input_not_int"]):
+                            case 0:
+                                pages -= 1
+                            case 1:
+                                break
+            case 2:
+                return
+
+
 def main(player: Player, data: Data) -> None:
     print(data.text["main_0"])
     print(data.text["home_4"].format(player.day))
     while True:
-        match get_choice_in_options(data.text["main_1"], lambda x: 0 <= x < 5, data.text["input_error"], data.text["input_not_int"]):
+        match get_choice_in_options(data.text["main_1"], lambda x: 0 <= x < 6, data.text["input_error"], data.text["input_not_int"]):
             case 0:
                 farmland(player, data)
             case 1:
                 corral(player, data)
             case 2:
                 while True:
-                    match get_choice_in_options(
-                        data.text["main_2"], lambda x: 0 <= x < 9, data.text["input_error"], data.text["input_not_int"]
-                    ):
+                    match get_choice_in_options(data.text["main_2"], lambda x: 0 <= x < 9, data.text["input_error"], data.text["input_not_int"]):
                         case 0:
                             buy(player, data, "seeds")
                         case 1:
@@ -477,9 +522,7 @@ def main(player: Player, data: Data) -> None:
                             break
             case 3:
                 while True:
-                    match get_choice_in_options(
-                        data.text["home_0"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"]
-                    ):
+                    match get_choice_in_options(data.text["home_0"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"]):
                         case 0:
                             print(data.text["home_1"])
                             next_day(player, data)
@@ -487,9 +530,7 @@ def main(player: Player, data: Data) -> None:
                         case 1:
                             print(data.text["shop_1"].format(player.bag.money))
                             while True:
-                                match get_choice_in_options(
-                                    data.text["home_2"], lambda x: 0 <= x < 5, data.text["input_error"], data.text["input_not_int"]
-                                ):
+                                match get_choice_in_options(data.text["home_2"], lambda x: 0 <= x < 5, data.text["input_error"], data.text["input_not_int"]):
                                     case 0:
                                         bag = player.bag.seeds
                                     case 1:
@@ -508,6 +549,8 @@ def main(player: Player, data: Data) -> None:
                             break
             case 4:
                 setting(player, data)
+            case 5:
+                docs(data)
 
 
 if __name__ == "__main__":

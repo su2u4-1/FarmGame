@@ -75,7 +75,7 @@
     "text_file_not_found": "Text file not found: {0}",
     "file_error": "Cannot open file '{0}': {1}",
     "load_data_error": "Cannot load data {0}: {1}",
-    "input_not_int": "Input is not a number",
+    "input_not_int": "Input is not a integer",
     "format_error": "Format error",
     "empty": "Empty",
     "start_0": "Save file name (enter -1 to cancel): ",
@@ -130,7 +130,7 @@
     "corral_3": "Current number of corrals: {0}",
     "corral_op_0": "Add Animal | Feed | Slaughter | Clean | Inject | Info | Exit",
     "main_0": "Game Start",
-    "main_1": "Farmland | Corral | Shop | Home | Other",
+    "main_1": "Farmland | Corral | Shop | Home | Other | Documents",
     "main_2": "Buy Seeds | Buy Items | Buy Crops | Buy Animals | Sell Seeds | Sell Items | Sell Crops | Sell Animals | Exit",
     "no_item": "Nothing here",
     "bag_1": "ID | Name | Quantity",
@@ -155,5 +155,14 @@
     "home_0": "Sleep | Check bag | Exit",
     "home_1": "Spend the night in a dream",
     "home_2": "View Seed Bag | View Item Bag | View Crop Bag | View Animal Bag | Close",
-    "home_3": "ID | Name | Quantity | Describe"
+    "home_3": "ID | Name | Quantity | Describe",
+    "docs_0": "Documentation | How to Play | Exit",
+    "docs_1": "Items | Crops | Animals | Seeds | Exit",
+    "docs_2": "Name | Description",
+    "docs_3": "Next Page | Exit",
+    "docs_4": "Previous Page | Next Page | Exit",
+    "docs_5": "Previous Page | Exit",
+    "docs_6": "Exit",
+    "page_0": "Basic Gameplay: At the start of the game, you need to buy seeds, then go to the fields to plant them. Wait for the crops to grow, and after harvesting, you can sell them at the store. With the money earned, you can buy more seeds or animals.\nThe game features two main activities: farming and animal husbandry. Farming focuses on growing crops, while animal husbandry involves raising animals. There is also a store in the game for buying and selling items.\nThere are many types of crops and animals in the game, each with different requirements and attributes. Various tools and equipment are available to help you manage your fields and livestock more effectively.",
+    "page_1": "Let's start with how to plant crops. First, enter the fields from the main screen, usually by pressing [2] to check the current field details, then press [1] to tend to the fields.\n(For input fields that mention 'selectable range' in parentheses, you can select what you want in multiple ways. You can type 'all' to select everything, or use 'a-b' or 'a~b' to select the range from a to b. Of course, the basic method of separating with spaces also works.)\nWhen you enter the field management interface, there are several options:\n[1] is for planting, where you select the seeds to plant. The number of seeds must be greater than or equal to the number of selected fields.\n[2] is for fertilizing, which increases soil fertility. Select the fields to fertilize and choose the type of fertilizer (organic or chemical). Using chemical fertilizer will lose organic certification, while organic fertilizer slightly increases the chance of bugs appearing.\n[3] is for harvesting/removing crops, which collects mature crops and removes immature ones.\n[4] is for weeding, which removes weeds and reduces their appearance rate. You can choose to do it manually or use herbicide. Manual weeding consumes stamina, while using herbicide will lose organic certification. Weeds consume more soil fertility when they appear.\n[5] is for pest control, which reduces the number of bugs and lowers their appearance rate. You can choose to do it manually or use insecticide. Manual pest control consumes stamina, while using insecticide will lose organic certification. If the number of bugs exceeds the crop's resistance, it will cause crop death.\n[6] is for information, where you can view detailed information about the fields; [7] is for exiting.\nCrops require soil fertility to grow. Each day, crops consume a certain amount of soil fertility based on their requirements. If soil fertility falls below this requirement, crop growth will stop.\nDuring planting, you will typically need to buy fertilizers; otherwise, soil fertility cannot support crop growth.\nIf a field has no crops planted, it will undergo a weed generation check but not a pest appearance check. If no weeds appear and soil fertility is below 10, that field's soil fertility will increase by 1."
 }

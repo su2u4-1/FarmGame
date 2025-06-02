@@ -24,9 +24,7 @@ class Crop:
 
 
 class Animal:
-    def __init__(
-        self, baby_price: int, growth_time: int, sell_price: int, food: tuple[str], food_needed_per_day: int, required_neatness: int
-    ) -> None:
+    def __init__(self, baby_price: int, growth_time: int, sell_price: int, food: tuple[str], food_needed_per_day: int, required_neatness: int) -> None:
         self.baby_price = baby_price
         self.growth_time = growth_time
         self.sell_price = sell_price
@@ -51,13 +49,7 @@ class Text(dict[str, str]):
 
 class Data:
     def __init__(
-        self,
-        text: Text,
-        items: dict[str, Item],
-        seeds: dict[str, Seed],
-        crops: dict[str, Crop],
-        animals: dict[str, Animal],
-        language: Sequence[str],
+        self, text: Text, items: dict[str, Item], seeds: dict[str, Seed], crops: dict[str, Crop], animals: dict[str, Animal], language: Sequence[str], gameplay: int
     ) -> None:
         self.text = text
         self.items = items
@@ -65,6 +57,7 @@ class Data:
         self.crops = crops
         self.animals = animals
         self.language = tuple(language)
+        self.gameplay_number = gameplay
 
     def update_text(self, path: str) -> None:
         try:
@@ -73,4 +66,4 @@ class Data:
         except FileNotFoundError:
             print(self.text["text_file_not_found"].format(path))
         except Exception as e:
-            print(self.text["text_file_error"].format(path, e))
+            print(self.text["file_error"].format(path, e))
