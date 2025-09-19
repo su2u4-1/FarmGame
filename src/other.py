@@ -13,7 +13,7 @@ def limit_range(
     min_value: float = 0.01,
     max_value: float = 1,
     n_digits: Optional[SupportsIndex] = 2,
-) -> float | int:
+) -> float:
     """
     Limit the value to a specified range and round it to a specified number of decimal places.
 

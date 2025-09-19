@@ -3,7 +3,7 @@
 這是一個簡單的純文字農場小遊戲，玩家可以種植作物或養殖動物來賺取金錢，並用錢來擴張自己的農場。
 This is a simple text-based farm game where players can plant crops or raise animals to earn money and use the money to expand their farm.
 ## 環境 / Environment
-- Python 3.8+
+- Python 3.10+
 - pip install wcwidth
 ## 檔案結構 / File Structure
 ```
@@ -18,8 +18,8 @@ This is a simple text-based farm game where players can plant crops or raise ani
 │   ├── language.json   // support language list
 │   └── seed.json       // seed data
 ├── language/
-│   ├── en.json5        // text data in English
-│   └── zh-tw.json5     // text data in Chinese(Taiwan)
+│   ├── en.json         // text data in English
+│   └── zh-tw.json      // text data in Chinese(Taiwan)
 └── src/
     ├── data.py         // data class
     ├── main.py         // program entry point
