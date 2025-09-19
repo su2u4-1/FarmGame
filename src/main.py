@@ -93,9 +93,29 @@ def load_player(root_path: str, text: Text) -> Player:
         match get_choice_in_options(text["start_5"], lambda x: 0 <= x < 3, text["input_error"], text["input_not_int"]):
             case 0:
                 print(text["start_7"])
+                info = DisplayInfo(text["start_8"], text["no_save"])
                 for i in listdir(f"{root_path}/archive"):
                     if i.endswith(".json"):
-                        print(f"    {i[:-5]}")
+                        try:
+                            with open(f"{root_path}/archive/{i}", "r", encoding="utf-8") as f:
+                                save = load(f)
+                        except:
+                            print(text["start_6"].format(i[:-5]))
+                            continue
+                        try:
+                            money = save["bag"]["money"]
+                        except KeyError:
+                            money = -1
+                        try:
+                            day = save["day"]
+                        except KeyError:
+                            day = -1
+                        try:
+                            save_time = save["time"]
+                        except KeyError:
+                            save_time = "Unknown"
+                        info.add((i[:-5], money, day, save_time))
+                info.display()
                 f = True
                 while True:
                     name = input(text["start_0"])

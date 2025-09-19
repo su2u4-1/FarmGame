@@ -1,5 +1,10 @@
 from json import load
 from typing import Any, Callable, Sequence, TypeVar
+from time import localtime
+
+
+def get_time() -> str:
+    return f"{localtime().tm_year}-{localtime().tm_mon:02}-{localtime().tm_mday:02} {localtime().tm_hour:02}:{localtime().tm_min:02}:{localtime().tm_sec:02}"
 
 
 class Farmland:
@@ -176,12 +181,7 @@ class Player:
             t.append(f'"{k}": {v}')
         s += ",".join(t)
         t = []
-        s += (
-            "},"
-            + f'"money": {self.bag.money}'
-            + "},"
-            + f'"language": "{self.language}","farmland_size": {self.farmland_size},"farmland": ['
-        )
+        s += "}," + f'"money": {self.bag.money}' + "}," + f'"language": "{self.language}","farmland_size": {self.farmland_size},"farmland": ['
         for i in range(self.farmland_size):
             t.append(
                 "{"
@@ -198,5 +198,6 @@ class Player:
                 + "}"
             )
         s += ",".join(t)
-        s += "]," + f'"energy": {self.energy}' + "}"
+        s += "]," + f'"energy": {self.energy}'
+        s += f', "time": "{get_time()}"' + "}"
         return s
