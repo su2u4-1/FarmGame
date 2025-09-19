@@ -194,20 +194,13 @@ def docs(data: Data) -> None:
             case 0:
                 while True:
                     keys = ()
-                    match get_choice_in_options(data.text["docs_1"], lambda x: 0 <= x < 5, data.text["input_error"], data.text["input_not_int"]):
-                        case 0:
-                            keys = data.items.keys()
-                        case 1:
-                            keys = data.crops.keys()
-                        case 2:
-                            keys = data.animals.keys()
-                        case 3:
-                            keys = data.seeds.keys()
-                        case 4:
-                            break
-                    info = DisplayInfo(data.text["docs_2"], data.text["no_item"])
+                    n = get_choice_in_options(data.text["docs_1"], lambda x: 0 <= x < 5, data.text["input_error"], data.text["input_not_int"])
+                    if n == 4:
+                        break
+                    keys = (data.items, data.crops, data.animals, data.seeds)[n].keys()
+                    info = DisplayInfo(data.text[("items", "crops", "animals", "seeds")[n] + "_header"], data.text["no_item"])
                     for i in keys:
-                        info.add((data.text[i], data.text[i + "_describe"]))
+                        info.add(data.text[i] + " | " + data.text[i + "_describe"])
                     info.display()
             case 1:
                 pages = 0
@@ -251,25 +244,13 @@ def main(player: Player, data: Data) -> None:
                 corral(player, data)
             case 2:
                 while True:
-                    match get_choice_in_options(data.text["main_2"], lambda x: 0 <= x < 9, data.text["input_error"], data.text["input_not_int"]):
-                        case 0:
-                            buy(player, data, "seeds")
-                        case 1:
-                            buy(player, data, "items")
-                        case 2:
-                            buy(player, data, "crops")
-                        case 3:
-                            buy(player, data, "animals")
-                        case 4:
-                            sell(player, data, "seeds")
-                        case 5:
-                            sell(player, data, "items")
-                        case 6:
-                            sell(player, data, "crops")
-                        case 7:
-                            sell(player, data, "animals")
-                        case 8:
-                            break
+                    n = get_choice_in_options(data.text["main_2"], lambda x: 0 <= x < 9, data.text["input_error"], data.text["input_not_int"])
+                    if n < 4:
+                        buy(player, data, ("seeds", "items", "crops", "animals")[n])
+                    elif n < 8:
+                        sell(player, data, ("seeds", "items", "crops", "animals")[n - 4])
+                    else:
+                        break
             case 3:
                 while True:
                     match get_choice_in_options(data.text["home_0"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"]):
@@ -280,20 +261,13 @@ def main(player: Player, data: Data) -> None:
                         case 1:
                             print(data.text["shop_1"].format(player.bag.money))
                             while True:
-                                match get_choice_in_options(data.text["home_2"], lambda x: 0 <= x < 5, data.text["input_error"], data.text["input_not_int"]):
-                                    case 0:
-                                        bag = player.bag.seeds
-                                    case 1:
-                                        bag = player.bag.items
-                                    case 2:
-                                        bag = player.bag.crops
-                                    case 3:
-                                        bag = player.bag.animals
-                                    case 4:
-                                        break
-                                info = DisplayInfo(data.text["home_3"], data.text["no_item"])
-                                for i, (k, v) in enumerate(bag.items()):  # type: ignore
-                                    info.add((i + 1, data.text[k], v, data.text[k + "_describe"]))
+                                n = get_choice_in_options(data.text["home_2"], lambda x: 0 <= x < 5, data.text["input_error"], data.text["input_not_int"])
+                                if n == 4:
+                                    break
+                                bag = (player.bag.seeds, player.bag.items, player.bag.crops, player.bag.animals)[n]
+                                info = DisplayInfo(data.text["home_3_" + ("seeds", "items", "crops", "animals")[n]], data.text["no_item"])
+                                for i, (k, v) in enumerate(bag.items()):
+                                    info.add(f"{i + 1} | {data.text[k]} | {v} |" + data.text[k + "_describe"])
                                 info.display()
                         case 2:
                             break
