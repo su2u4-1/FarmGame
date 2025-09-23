@@ -90,6 +90,8 @@ def get_int_input(
     within_range_condition: Callable[[int], bool],
     out_range_err_msg: str = "Please enter a valid number.",
     input_not_int_err_msg: str = "Please enter a integer.",
+    all_condition: Callable[[str], bool] = lambda x: False,
+    all_flag: int = -2,
     stop_condition: Callable[[str], bool] = lambda x: x == "-1",
     stop_flag: int = -1,
 ) -> int:
@@ -101,11 +103,15 @@ def get_int_input(
         within_range_condition (Callable[[int], bool]): A function that checks if the input is within range.
         out_range_err_msg (str): The error message to display for out of range input.
         input_not_int_err_msg (str): The error message to display for non-integer input.
+        all_condition (Callable[[str], bool]): A function that checks if the input is an "all" condition.
+        all_flag (int): The value to return if the "all" condition is met.
         stop_condition (Callable[[str], bool]): A function that checks if the input is a stop condition.
         stop_flag (int): The value to return if the stop condition is met.
 
     Returns:
-        int: The integer input from the user or the stop flag.
+        int: The integer input from the user or special flags:
+            - stop_flag (default: -1): When the stop condition is met.
+            - all_flag (default: -2): When the "all" condition is met.
     """
     if not request.endswith(":") and not request.endswith(": "):
         request += ": "
@@ -115,6 +121,8 @@ def get_int_input(
         choice = input(request)
         if stop_condition(choice):
             return stop_flag
+        elif all_condition(choice):
+            return all_flag
         if choice.isdigit():
             choice = int(choice)
         else:
@@ -261,9 +269,9 @@ def get_bool_input(request: str, default: Optional[bool] = None, input_err_msg: 
         choice = input(request)
         if choice == "" and default is not None:
             return default
-        elif choice.lower() in ("y", "yes"):
+        elif choice.lower() in ("y", "yes", "1"):
             return True
-        elif choice.lower() in ("n", "no"):
+        elif choice.lower() in ("n", "no", "0", "2"):
             return False
         else:
             print(input_err_msg)

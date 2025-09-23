@@ -74,8 +74,10 @@ def sell(player: Player, data: Data, kind: Literal["seeds", "items", "crops", "a
         if result == -1:
             return
         choice = d[result]
-        sell_number = 1 + get_int_input(data.text["shop_4"], lambda x: 0 <= x < bag[choice], data.text["shop_5"], data.text["input_not_int"])
-        if sell_number <= 0:
+        sell_number = 1 + get_int_input(data.text["shop_4"], lambda x: 0 <= x < bag[choice], data.text["shop_5"], data.text["input_not_int"], lambda x: x == "all", -2)
+        if sell_number == -2 + 1:
+            sell_number = bag[choice]
+        elif sell_number <= 0:
             return
         bag[choice] -= sell_number
         player.bag.money += sell_number * now_data[choice].sell_price
