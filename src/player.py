@@ -163,12 +163,12 @@ class Player:
         t: list[str] = []
         s = "{" + f'"name": "{self.name}","day": {self.day},' + '"bag": {"items": {'
         for k, v in self.bag.items.items():
-            t.append(f'"{k}": {v},')
+            t.append(f'"{k}": {v}')
         s += ",".join(t)
         t = []
         s += '},"seeds": {'
         for k, v in self.bag.seeds.items():
-            t.append(f'"{k}": {v},')
+            t.append(f'"{k}": {v}')
         s += ",".join(t)
         t = []
         s += '},"crops": {'
