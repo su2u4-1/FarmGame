@@ -1,10 +1,16 @@
-from typing import Callable, Optional, Sequence, Union
+from typing import Callable, Optional, Sequence, Union, TypeVar
 
 from wcwidth import wcswidth
 
+T = TypeVar("T")
+
+
+def float_formatter(value: float) -> str:
+    return f"{value:.2f}"
+
 
 class DisplayInfo:
-    def __init__(self, title: Union[Sequence[object], str], empty_msg: str) -> None:
+    def __init__(self, title: Union[Sequence[object], str], empty_msg: str, formatter: tuple[tuple[type[T], Callable[[T], str]]] = ((float, float_formatter),)) -> None:
         """
         Initializes the Display_info class with a title.
 
@@ -20,6 +26,7 @@ class DisplayInfo:
         self.size = len(title)
         self.length: list[int] = [wcswidth(t) for t in title]
         self.empty_msg = empty_msg
+        self.formatter = formatter
 
     def add(self, item: Sequence[object]) -> None:
         """
@@ -32,6 +39,8 @@ class DisplayInfo:
         if isinstance(item, str):
             item = tuple(i.strip() for i in item.split("|"))
         else:
+            for f in self.formatter:
+                item = tuple(f[1](i) if isinstance(i, f[0]) else i for i in item)
             item = tuple(str(i).strip() for i in item)
         if len(item) > self.size:
             raise ValueError("Item length exceeds title length.")
