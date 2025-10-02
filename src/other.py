@@ -108,8 +108,7 @@ def disinfestation(player: Player, choices_farmland_id: tuple[int, ...], insecti
         for i in choices_farmland_id:
             i = player.farmland[i]
             player.energy -= ri(1, 5)
-            if i.bug_number > 0:
-                player.energy -= ri(2, 10) * i.bug_number
+            player.energy -= ri(2, 10) * i.bug_number
             i.bug_appear_prob = limit_range(i.bug_appear_prob, "/", ri(150, 250) / 100)
             i.bug_number = ri(0, i.bug_number // 5)
 
@@ -119,15 +118,15 @@ def next_day(player: Player, data: Data) -> None:
     player.energy = 100
     for i in player.farmland:
         if i.crop != "":
+            if i.bug_appear_prob * 100 > ri(0, 100):
+                i.bug_number += 1
             if i.ripe:
                 i.bug_appear_prob = limit_range(i.bug_appear_prob, "+", ri(5, 50) / 100)
             else:
                 i.bug_appear_prob = limit_range(i.bug_appear_prob, "+", ri(1, 30) / 100)
-            if i.bug_appear_prob * 100 > ri(0, 100):
-                i.bug_number += 1
-            i.weed_appear_prob = limit_range(i.weed_appear_prob, "+", ri(1, 30) / 100)
             if i.weed_appear_prob * 100 > ri(0, 100):
                 i.weed_appear = True
+            i.weed_appear_prob = limit_range(i.weed_appear_prob, "+", ri(1, 30) / 100)
             if data.crops[i.crop].pest_resistance <= i.bug_number:
                 print(data.text["class_1"].format(data.text[i.crop]))
                 i.crop = ""
