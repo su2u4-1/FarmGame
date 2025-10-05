@@ -59,7 +59,7 @@ def fertilize(player: Player, choices_farmland_id: tuple[int, ...], organic: boo
 
 
 def harvest_remove(player: Player, choices_farmland_id: tuple[int, ...]) -> dict[str, int]:
-    crops: DefaultDict[str, int] = DefaultDict(lambda _: 0, lambda _: 0)
+    crops: DefaultDict[str, int] = DefaultDict(lambda _: 0, lambda _, v: v <= 0)
     for i in choices_farmland_id:
         i = player.farmland[i]
         if i.crop != "":
