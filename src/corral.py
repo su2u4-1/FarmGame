@@ -18,7 +18,7 @@ def manage_corral(player: Player, data: Data, choices: tuple[int, ...]) -> None:
                 pass
             case 5:
                 pass
-            case 6:
+            case 6 | -1:
                 return
 
 
@@ -57,5 +57,5 @@ def corral(player: Player, data: Data) -> None:
                     )
                 print(data.text["corral_3"].format(player.corral_size))
                 info.display()
-            case 2:
+            case 2 | -1:
                 return

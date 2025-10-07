@@ -27,7 +27,7 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                 print(data.text["farm_op_5"].format(data.text["organic_fertilizer"], player.bag.items["organic_fertilizer"]))
                 print(data.text["farm_op_5"].format(data.text["chemical_fertilizer"], player.bag.items["chemical_fertilizer"]))
                 choice_fertilizer = get_choice_in_options(data.text["farm_op_6"], lambda x: 0 <= x < 3, data.text["farm_op_3"], data.text["input_not_int"])
-                if choice_fertilizer == 2:
+                if choice_fertilizer == 2 or choice_fertilizer == -1:
                     continue
                 if choice_fertilizer == 0:
                     choice_fertilizer = "organic_fertilizer"
@@ -51,7 +51,7 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
             case 3:
                 print(data.text["farm_op_5"].format(data.text["herbicide"], player.bag.items["herbicide"]))
                 choice_herbicide = get_choice_in_options(data.text["farm_op_11"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"])
-                if choice_herbicide == 2:
+                if choice_herbicide == 2 or choice_herbicide == -1:
                     continue
                 if choice_herbicide == 0 and player.bag.items["herbicide"] < len(choices):
                     print(data.text["farm_op_7"].format(data.text["herbicide"]))
@@ -66,7 +66,7 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
             case 4:
                 print(data.text["farm_op_5"].format(data.text["insecticide"], player.bag.items["insecticide"]))
                 choice_insecticide = get_choice_in_options(data.text["farm_op_10"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"])
-                if choice_insecticide == 2:
+                if choice_insecticide == 2 or choice_insecticide == -1:
                     continue
                 if choice_insecticide == 0 and player.bag.items["insecticide"] < len(choices):
                     print(data.text["farm_op_7"].format(data.text["insecticide"]))
@@ -98,7 +98,7 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                     )
                 print(data.text["farmland_3"].format(len(choices)))
                 info.display()
-            case 6:
+            case 6 | -1:
                 return
 
 
@@ -138,5 +138,5 @@ def farmland(player: Player, data: Data) -> None:
                     )
                 print(data.text["farmland_3"].format(player.farmland_size))
                 info.display()
-            case 2:
+            case 2 | -1:
                 return

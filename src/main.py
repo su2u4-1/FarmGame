@@ -141,7 +141,7 @@ def load_player(root_path: str, text: Text) -> Player:
                 player = Player()
                 player.name = name
                 return player
-            case 2:
+            case 2 | -1:
                 print(text["game_close"])
                 exit()
 
@@ -184,7 +184,7 @@ def setting(player: Player, data: Data) -> None:
                 if get_bool_input(data.text["other_5"], True):
                     print(data.text["game_close"])
                     exit()
-            case 4:
+            case 4 | -1:
                 return
 
 
@@ -195,7 +195,7 @@ def docs(data: Data) -> None:
                 while True:
                     keys = ()
                     n = get_choice_in_options(data.text["docs_1"], lambda x: 0 <= x < 5, data.text["input_error"], data.text["input_not_int"])
-                    if n == 4:
+                    if n == 4 or n == -1:
                         break
                     keys = (data.items, data.crops, data.animals, data.seeds)[n].keys()
                     info = DisplayInfo(data.text[("items", "crops", "animals", "seeds")[n] + "_header"], data.text["no_item"])
@@ -207,13 +207,13 @@ def docs(data: Data) -> None:
                 while True:
                     print(data.text[f"page_{pages}"])
                     if pages == 0 and data.gameplay_number == 1:
-                        if get_choice_in_options(data.text["docs_6"], lambda x: x == 0, data.text["input_error"], data.text["input_not_int"]) == 0:
-                            break
+                        get_choice_in_options(data.text["docs_6"], lambda x: x == 0, data.text["input_error"], data.text["input_not_int"])
+                        break
                     elif pages == 0:
                         match get_choice_in_options(data.text["docs_3"], lambda x: 0 <= x < 2, data.text["input_error"], data.text["input_not_int"]):
                             case 0:
                                 pages = 1
-                            case 1:
+                            case 1 | -1:
                                 break
                     elif pages > 0 and pages < data.gameplay_number - 1:
                         match get_choice_in_options(data.text["docs_4"], lambda x: 0 <= x < 3, data.text["input_error"], data.text["input_not_int"]):
@@ -221,15 +221,15 @@ def docs(data: Data) -> None:
                                 pages -= 1
                             case 1:
                                 pages += 1
-                            case 2:
+                            case 2 | -1:
                                 break
                     elif pages == data.gameplay_number - 1:
                         match get_choice_in_options(data.text["docs_5"], lambda x: 0 <= x < 2, data.text["input_error"], data.text["input_not_int"]):
                             case 0:
                                 pages -= 1
-                            case 1:
+                            case 1 | -1:
                                 break
-            case 2:
+            case 2 | -1:
                 return
 
 
@@ -237,7 +237,7 @@ def main(player: Player, data: Data) -> None:
     print(data.text["main_0"])
     print(data.text["home_4"].format(player.day))
     while True:
-        match get_choice_in_options(data.text["main_1"], lambda x: 0 <= x < 6, data.text["input_error"], data.text["input_not_int"]):
+        match get_choice_in_options(data.text["main_1"], lambda x: 0 <= x < 6, data.text["input_error"], data.text["input_not_int"], lambda _: False):
             case 0:
                 farmland(player, data)
             case 1:
@@ -245,9 +245,9 @@ def main(player: Player, data: Data) -> None:
             case 2:
                 while True:
                     n = get_choice_in_options(data.text["main_2"], lambda x: 0 <= x < 9, data.text["input_error"], data.text["input_not_int"])
-                    if n < 4:
+                    if -1 < n < 4:
                         buy(player, data, ("seeds", "items", "crops", "animals")[n])
-                    elif n < 8:
+                    elif 3 < n < 8:
                         sell(player, data, ("seeds", "items", "crops", "animals")[n - 4])
                     else:
                         break
@@ -262,14 +262,14 @@ def main(player: Player, data: Data) -> None:
                             print(data.text["shop_1"].format(player.bag.money))
                             while True:
                                 n = get_choice_in_options(data.text["home_2"], lambda x: 0 <= x < 5, data.text["input_error"], data.text["input_not_int"])
-                                if n == 4:
+                                if n == 4 or n == -1:
                                     break
                                 bag = (player.bag.seeds, player.bag.items, player.bag.crops, player.bag.animals)[n]
                                 info = DisplayInfo(data.text["home_3_" + ("seeds", "items", "crops", "animals")[n]], data.text["no_item"])
                                 for i, (k, v) in enumerate(bag.items()):
                                     info.add(f"{i + 1} | {data.text[k]} | {v} |" + data.text[k + "_describe"])
                                 info.display()
-                        case 2:
+                        case 2 | -1:
                             break
             case 4:
                 setting(player, data)

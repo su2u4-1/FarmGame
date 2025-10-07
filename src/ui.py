@@ -66,6 +66,8 @@ def get_choice_in_options(
     within_range_condition: Callable[[int], bool],
     out_range_err_msg: str = "Please enter a valid number.",
     input_not_int_err_msg: str = "Please enter a integer.",
+    exit_condition: Callable[[str], bool] = lambda x: x.lower() in ("exit", "quit", "q", "0"),
+    exit_flag: int = -1,
 ) -> int:
     """
     Displays a list of options and returns the user's choice.
@@ -74,8 +76,10 @@ def get_choice_in_options(
         within_range_condition (Callable[[int], bool]): A function that checks if the input is within range.
         out_range_err_msg (str): The error message to display for out of range input.
         input_not_int_err_msg (str): The error message to display for non-integer input.
+        exit_condition (Callable[[str], bool]): A function that checks if the input is an exit condition.
+        exit_flag (int): The value to return if the exit condition is met.
     Returns:
-        int: The index of the chosen option.
+        int: The index of the chosen option or exit_flag if the exit condition is met.
     """
     if isinstance(options, str):
         options = options.split("|")
@@ -83,6 +87,8 @@ def get_choice_in_options(
 
     while True:
         choice = input(show).strip()
+        if exit_condition(choice):
+            return exit_flag
         if choice.isdigit():
             choice = int(choice)
         else:
