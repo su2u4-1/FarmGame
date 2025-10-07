@@ -8,8 +8,6 @@ This is a simple text-based farm game where players can plant crops or raise ani
 ## 檔案結構 / File Structure
 ```
 .
-├── README.md           // this file
-├── .gitignore          // ignore file
 ├── archive/            // user archive folder
 ├── data/
 │   ├── animals.json    // animal data
@@ -21,9 +19,12 @@ This is a simple text-based farm game where players can plant crops or raise ani
 │   ├── en.json         // text data in English
 │   └── zh-tw.json      // text data in Chinese(Taiwan)
 └── src/
+    ├── corral.py       // corral management functions
     ├── data.py         // data class
+    ├── farmland.py     // farmland management functions
     ├── main.py         // program entry point
+    ├── other.py        // utility functions and game mechanics
     ├── player.py       // player class
-    ├── tools.py        // just an empty file now
+    ├── shop.py         // shop system (buy/sell functions)
     └── ui.py           // UI functions
 ```
