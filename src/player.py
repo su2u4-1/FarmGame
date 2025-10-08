@@ -66,8 +66,7 @@ class DefaultDict(dict[K, V]):
         self.delete_value = delete_value
 
     def __missing__(self, key: K) -> V:
-        self[key] = self.default_factory(key)
-        return self[key]
+        return self.default_factory(key)
 
     def __getitem__(self, key: K) -> V:
         if key in self:
