@@ -1,5 +1,5 @@
 from json import load
-from typing import Any, Callable, Sequence, TypeVar
+from typing import Any, Callable, Optional, TypeVar
 from time import localtime
 
 
@@ -30,6 +30,9 @@ class Farmland:
         self.ripe = ripe
         self.organic = organic
 
+    def save(self) -> str:
+        return f'{{"crop": "{self.crop}","growth_time": {self.growth_time},"soil_fertility": {self.soil_fertility},"bug_appear_prob": {self.bug_appear_prob},"bug_number": {self.bug_number},"weed_appear_prob": {self.weed_appear_prob},"weed_appear": {"true" if self.weed_appear else "false"},"ripe": {"true" if self.ripe else "false"},"organic": {"true" if self.organic else " false"}}}'
+
 
 class Corral:
     def __init__(
@@ -37,7 +40,7 @@ class Corral:
         animal: str = "",
         growth_time: int = 0,
         neatness: int = 10,
-        manger: Sequence[str] = (),
+        manger: Optional[dict[str, int]] = None,
         health: int = 100,
         sick: bool = False,
         sick_prob: float = 0.1,
@@ -47,12 +50,22 @@ class Corral:
         self.animal = animal
         self.growth_time = growth_time
         self.neatness = neatness
-        self.manger = list(manger)
+        if manger is None:
+            self.manger: DefaultDict[str, int] = DefaultDict(lambda _: 0, lambda _, v: v <= 0)
+        else:
+            self.manger: DefaultDict[str, int] = DefaultDict(lambda _: 0, lambda _, v: v <= 0, manger)
         self.health = health
         self.sick = sick
         self.sick_prob = sick_prob
         self.grow_up = grow_up
         self.hunger = hunger
+
+    def save(self) -> str:
+        return (
+            f'{{"animal": "{self.animal}","growth_time": {self.growth_time},"neatness": {self.neatness},"manger": {{'
+            + ",".join(f'"{k}": {v}' for k, v in self.manger.items())
+            + f'}},"health": {self.health},"sick": {"true" if self.sick else "false"},"sick_prob": {self.sick_prob},"grow_up": {"true" if self.grow_up else "false"},"hunger": {self.hunger}}}'
+        )
 
 
 K = TypeVar("K")
@@ -87,6 +100,19 @@ class Bag:
         self.crops: DefaultDict[str, int] = DefaultDict(lambda _: 0, lambda _, v: v <= 0)
         self.animals: DefaultDict[str, int] = DefaultDict(lambda _: 0, lambda _, v: v <= 0)
         self.money = 100
+
+    def save(self) -> str:
+        return (
+            '{"items": {'
+            + ",".join(f'"{k}": {v}' for k, v in self.items.items())
+            + '},"seeds": {'
+            + ",".join(f'"{k}": {v}' for k, v in self.seeds.items())
+            + '},"crops": {'
+            + ",".join(f'"{k}": {v}' for k, v in self.crops.items())
+            + '},"animals": {'
+            + ",".join(f'"{k}": {v}' for k, v in self.animals.items())
+            + "}"
+        )
 
 
 class Player:
@@ -160,44 +186,12 @@ class Player:
         return 0
 
     def save(self) -> str:
-        t: list[str] = []
-        s = "{" + f'"name": "{self.name}","day": {self.day},' + '"bag": {"items": {'
-        for k, v in self.bag.items.items():
-            t.append(f'"{k}": {v}')
-        s += ",".join(t)
-        t = []
-        s += '},"seeds": {'
-        for k, v in self.bag.seeds.items():
-            t.append(f'"{k}": {v}')
-        s += ",".join(t)
-        t = []
-        s += '},"crops": {'
-        for k, v in self.bag.crops.items():
-            t.append(f'"{k}": {v}')
-        s += ",".join(t)
-        t = []
-        s += '},"animals": {'
-        for k, v in self.bag.animals.items():
-            t.append(f'"{k}": {v}')
-        s += ",".join(t)
-        t = []
-        s += "}," + f'"money": {self.bag.money}' + "}," + f'"language": "{self.language}","farmland_size": {self.farmland_size},"farmland": ['
-        for i in range(self.farmland_size):
-            t.append(
-                "{"
-                + f'"crop": "{self.farmland[i].crop}","growth_time": {self.farmland[i].growth_time},"soil_fertility": {self.farmland[i].soil_fertility},"bug_appear_prob": {self.farmland[i].bug_appear_prob},"bug_number": {self.farmland[i].bug_number},"weed_appear_prob": {self.farmland[i].weed_appear_prob},"weed_appear": {"true" if self.farmland[i].weed_appear else "false"},"ripe": {"true" if self.farmland[i].ripe else "false"},"organic": {"true" if self.farmland[i].organic else " false"}'
-                + "}"
-            )
-        s += ",".join(t)
-        t = []
+        s = "{" + f'"name": "{self.name}","day": {self.day}, "bag":'
+        s += self.bag.save()
+        s += f',"money": {self.bag.money}' + "}," + f'"language": "{self.language}","farmland_size": {self.farmland_size},"farmland": ['
+        s += ",".join(i.save() for i in self.farmland)
         s += f'],"corral_size": {self.corral_size},"corral": ['
-        for i in range(self.corral_size):
-            t.append(
-                "{"
-                + f'"animal": "{self.corral[i].animal}","growth_time": {self.corral[i].growth_time},"neatness": {self.corral[i].neatness},"manger": {self.corral[i].manger},"health": {self.corral[i].health},"sick": {"true" if self.corral[i].sick else "false"},"sick_prob": {self.corral[i].sick_prob},"grow_up": {"true" if self.corral[i].grow_up else "false"},"hunger": {self.corral[i].hunger}'
-                + "}"
-            )
-        s += ",".join(t)
+        s += ",".join(i.save() for i in self.corral)
         s += "]," + f'"energy": {self.energy}'
         s += f', "time": "{get_time()}"' + "}"
         return s
