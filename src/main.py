@@ -164,7 +164,7 @@ def setting(player: Player, data: Data) -> None:
                         return
             case 1:
                 if isfile(f"{root_path}/archive/{player.name}.json"):
-                    result = get_bool_input(data.text["other_8"], False)
+                    result = get_bool_input(data.text["other_8"], False, data.text["input_not_bool"])
                 else:
                     result = True
                 if result:
@@ -181,7 +181,7 @@ def setting(player: Player, data: Data) -> None:
                 player.name = input(data.text["other_9"])
                 print(data.text["other_11"].format(player.name))
             case 3:
-                if get_bool_input(data.text["other_5"], True):
+                if get_bool_input(data.text["other_5"], True, data.text["input_not_bool"]):
                     print(data.text["game_close"])
                     exit()
             case 4 | -1:

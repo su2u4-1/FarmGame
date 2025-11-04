@@ -39,7 +39,7 @@ def manage_farmland(player: Player, data: Data, choices: tuple[int, ...]) -> Non
                 fertilize(player, choices, choice_fertilizer == "organic_fertilizer")
                 print(data.text["farm_op_18"])
             case 2:
-                if not get_bool_input(data.text["farm_op_8"], False):
+                if not get_bool_input(data.text["farm_op_8"], False, data.text["input_not_bool"]):
                     continue
                 crops = harvest_remove(player, choices)
                 print(data.text["farm_op_9"])
