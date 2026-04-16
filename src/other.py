@@ -69,8 +69,7 @@ def harvest_remove(player: Player, choices_farmland_id: tuple[int, ...]) -> dict
             i.weed_appear = False
             i.growth_time = 0
             if i.ripe:
-                crop_name = i.crop.removesuffix("_seed")
-                crops[crop_name] = crops[crop_name] + 1
+                crops[i.crop.removesuffix("_seed")] += 1
             else:
                 i.soil_fertility = int(limit_range(i.soil_fertility, "*", ri(100, 150) / 100, 1, 50, None))
             i.ripe = False
@@ -111,6 +110,30 @@ def disinfestation(player: Player, choices_farmland_id: tuple[int, ...], insecti
             player.energy -= ri(2, 10) * i.bug_number
             i.bug_appear_prob = limit_range(i.bug_appear_prob, "/", ri(150, 250) / 100)
             i.bug_number = ri(0, i.bug_number // 5)
+
+
+def put_in_animal(player: Player, choices_corral_id: tuple[int, ...], choice_animal_id: str) -> None:
+    player.bag.animals[choice_animal_id] -= len(choices_corral_id)
+    for i in choices_corral_id:
+        player.corral[i].animal = choice_animal_id
+
+
+def put_in_crop(player: Player, choice_corral_id: tuple[int, ...], choice_crop_id: str) -> None:
+    player.bag.crops[choice_crop_id] -= len(choice_corral_id)
+    for i in choice_corral_id:
+        player.corral[i].manger[choice_crop_id] += 1
+
+
+def butcher(player: Player, choice_corral_id: tuple[int, ...]) -> dict[str, int]:
+    animals: DefaultDict[str, int] = DefaultDict(lambda _: 0, lambda _, v: v <= 0)
+    for i in choice_corral_id:
+        i = player.corral[i]
+        if i.animal != "":
+            if i.grow_up:
+                animals[i.animal] += 1
+            i.grow_up = False
+            i.animal = ""
+    return animals
 
 
 def next_day(player: Player, data: Data) -> None:
