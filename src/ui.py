@@ -274,13 +274,20 @@ def get_bool_input(request: str, default: Optional[bool] = None, input_err_msg: 
     Returns:
         bool: The boolean input from the user.
     """
+    f = False
     while True:
         if default is None:
-            request = request + "(y/n): "
+            if not f:
+                request = request + "(y/n): "
+            f = True
         elif default:
-            request = request + "(Y/n): "
+            if not f:
+                request = request + "(Y/n): "
+            f = True
         else:
-            request = request + "(y/N): "
+            if not f:
+                request = request + "(y/N): "
+            f = True
         choice = input(request)
         if choice == "" and default is not None:
             return default
