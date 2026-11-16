@@ -22,7 +22,7 @@ def init(root_path: str, language: str) -> Data:
     try:
         with open(f"{root_path}/data/items.json", "r", encoding="utf-8") as f:
             items = {k: Item(k, v["sell_price"]) for k, v in load(f).items()}
-    except FileNotFoundError | IOError as e:
+    except OSError as e:
         print(text["file_error"].format(f"{root_path}/data/items.json", e))
         exit(1)
     except Exception as e:
@@ -32,7 +32,7 @@ def init(root_path: str, language: str) -> Data:
     try:
         with open(f"{root_path}/data/seeds.json", "r", encoding="utf-8") as f:
             seeds = {k: Seed(k, v["sell_price"]) for k, v in load(f).items()}
-    except FileNotFoundError | IOError as e:
+    except OSError as e:
         print(text["file_error"].format(f"{root_path}/data/seeds.json", e))
         exit(1)
     except Exception as e:
@@ -42,7 +42,7 @@ def init(root_path: str, language: str) -> Data:
     try:
         with open(f"{root_path}/data/crops.json", "r", encoding="utf-8") as f:
             crops = {k: Crop(v["growth_time"], v["sell_price"], v["soil_needed"], v["pest_resistance"]) for k, v in load(f).items()}
-    except FileNotFoundError | IOError as e:
+    except OSError as e:
         print(text["file_error"].format(f"{root_path}/data/crops.json", e))
         exit(1)
     except Exception as e:
@@ -62,7 +62,7 @@ def init(root_path: str, language: str) -> Data:
                 )
                 for k, v in load(f).items()
             }
-    except FileNotFoundError | IOError as e:
+    except OSError as e:
         print(text["file_error"].format(f"{root_path}/data/animals.json", e))
         exit(1)
     except Exception as e:
@@ -72,7 +72,7 @@ def init(root_path: str, language: str) -> Data:
     try:
         with open(f"{root_path}/data/language.json", "r", encoding="utf-8") as f:
             language_list = load(f)
-    except FileNotFoundError | IOError as e:
+    except OSError as e:
         print(text["file_error"].format(f"{root_path}/data/language.json", e))
         exit(1)
     except Exception as e:
@@ -171,7 +171,7 @@ def setting(player: Player, data: Data) -> None:
                     try:
                         with open(f"{root_path}/archive/{player.name}.json", "w") as f:
                             f.write(player.save())
-                    except FileNotFoundError | IOError:
+                    except OSError:
                         print(data.text["other_4"].format(player.name))
                         continue
                     print(data.text["other_3"].format(player.name))

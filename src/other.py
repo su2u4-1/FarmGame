@@ -156,6 +156,7 @@ def next_day(player: Player, data: Data) -> None:
                 i.growth_time = 0
                 i.ripe = False
                 i.organic = True
+                continue
             if i.weed_appear:
                 i.soil_fertility -= choices((1, 2, 3), (12, 3, 1))[0]
             if i.soil_fertility >= data.crops[i.crop].soil_needed:

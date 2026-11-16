@@ -74,7 +74,7 @@ V = TypeVar("V")
 
 class DefaultDict(dict[K, V]):
     def __init__(self, default_factory: Callable[[K], V], delete_value: Callable[[K, V], bool], *args: Any, **kwargs: Any) -> None:
-        super().__init__(*args, *kwargs)
+        super().__init__(*args, **kwargs)
         self.default_factory = default_factory
         self.delete_value = delete_value
 
@@ -135,7 +135,7 @@ class Player:
         try:
             with open(file, "r") as f:
                 data = load(f)
-        except FileNotFoundError | IOError as e:
+        except OSError as e:
             print(f"Error: {e}")
             return 1
         try:
